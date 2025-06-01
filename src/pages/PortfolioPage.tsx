@@ -14,19 +14,16 @@ const PortfolioPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category>(null);
   const [selectedImage, setSelectedImage] = useState<PortfolioImage | null>(null);
 
-  // Sample portfolio images
   const portfolioImages: PortfolioImage[] = [
-    // Athletics images
     ...Array.from({ length: 18 }, (_, i) => ({
       id: i + 1,
       src: `/portfolio/athletics/sample-${i + 1}.jpg`,
       alt: `Athletics Photo ${i + 1}`,
       category: 'athletics' as const
     })),
-    // Portraits images (placeholder - you can add actual portrait images)
     ...Array.from({ length: 12 }, (_, i) => ({
       id: i + 19,
-      src: `/portfolio/athletics/sample-${(i % 18) + 1}.jpg`, // Using athletics images as placeholders
+      src: `/portfolio/athletics/sample-${(i % 18) + 1}.jpg`,
       alt: `Portrait Photo ${i + 1}`,
       category: 'portraits' as const
     }))
@@ -50,7 +47,10 @@ const PortfolioPage: React.FC = () => {
 
   if (!activeCategory) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sand via-sage/20 to-forest/30 relative overflow-hidden pt-20">
+      <div
+        className="min-h-screen bg-cover bg-center bg-no-repeat relative overflow-hidden pt-20"
+        style={{ backgroundImage: "url('/portfoliopagebg.png')" }}
+      >
         {/* Floating Particles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {[...Array(20)].map((_, i) => (
@@ -128,7 +128,10 @@ const PortfolioPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sand via-sage/10 to-forest/20 relative pt-20">
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat relative pt-20"
+      style={{ backgroundImage: "url('/portfoliopagebg.png')" }}
+    >
       <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 md:py-12">
         {/* Back Button */}
         <button
@@ -179,7 +182,6 @@ const PortfolioPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Empty State */}
         {filteredImages.length === 0 && (
           <div className="text-center py-20">
             <div className="mb-6">
@@ -195,7 +197,6 @@ const PortfolioPage: React.FC = () => {
         )}
       </div>
 
-      {/* Image Modal */}
       {selectedImage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-fadeInModal">
           <div className="relative max-w-5xl max-h-[90vh] w-full">
