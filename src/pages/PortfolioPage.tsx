@@ -41,7 +41,7 @@ const PortfolioPage: React.FC = () => {
   if (!activeCategory) {
     return (
       <div
-        className="min-h-screen bg-cover bg-center bg-no-repeat relative overflow-hidden pt-20"
+        className="min-h-screen bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden pt-20"
         style={{ backgroundImage: "url('/portfolio/portfoliopagebg.png')" }}
       >
         {/* Animated Leaves */}
@@ -62,7 +62,7 @@ const PortfolioPage: React.FC = () => {
           ))}
         </div>
 
-        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 py-24">
+        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-36 md:pt-48 pb-24">
           <h1 className="text-7xl md:text-8xl font-caveat font-bold text-forest mb-6 animate-fadeInUp">
             Explore My Work
           </h1>

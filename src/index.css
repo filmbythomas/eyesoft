@@ -348,3 +348,16 @@ a.highlight-link {
 .shadow-gold\/50 {
   box-shadow: 0 20px 60px -10px rgba(201, 166, 107, 0.5);
 }
+
+@keyframes diagonalScroll {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+.animate-diagonalScroll {
+  animation: diagonalScroll 60s linear infinite;
+}
