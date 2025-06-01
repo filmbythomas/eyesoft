@@ -115,11 +115,10 @@ export default {
         fadeInModal: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
-transitionTimingFunction: {
-  creative: 'cubic-bezier(0.68, -0.55, 0.27, 1.55)',
-},
-
         },
+      },
+      transitionTimingFunction: {
+        creative: 'cubic-bezier(0.68, -0.55, 0.27, 1.55)',
       },
     },
   },
