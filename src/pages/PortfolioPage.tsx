@@ -49,7 +49,7 @@ const PortfolioPage: React.FC = () => {
     return (
       <div
         className="min-h-screen bg-cover bg-center bg-no-repeat relative overflow-hidden pt-20"
-        style={{ backgroundImage: "url('/portfoliopagebg.png')" }}
+        style={{ backgroundImage: "url('/portfolio/portfoliopagebg.png')" }}
       >
         {/* Floating Particles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
