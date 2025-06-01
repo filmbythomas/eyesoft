@@ -27,7 +27,6 @@ export default {
           DEFAULT: '#87CEEB',
           dark: '#6CA8C7',
         },
-        // New nature-inspired colors
         sage: '#BEE3BE',
         forest: '#2F4F4F',
         sand: '#FDFCF6',
@@ -39,13 +38,12 @@ export default {
         display: ['Playfair Display', 'serif'],
         'freckle-face': ['Freckle Face', 'cursive'],
         'barrio': ['Barrio', 'cursive'],
-        // New nature-inspired fonts
-        'caveat': ['Caveat', 'cursive'],
-        'pacifico': ['Pacifico', 'cursive'],
-        'inter': ['Inter', 'sans-serif'],
+        caveat: ['Caveat', 'cursive'],
+        pacifico: ['Pacifico', 'cursive'],
+        inter: ['Inter', 'sans-serif'],
       },
       boxShadow: {
-        'pop': '0 10px 40px -10px rgba(0, 0, 0, 0.25)',
+        pop: '0 10px 40px -10px rgba(0, 0, 0, 0.25)',
         'card-3d': '0 20px 60px -10px rgba(0, 0, 0, 0.15), 0 8px 25px -5px rgba(0, 0, 0, 0.1)',
         '3xl': '0 35px 60px -12px rgba(0, 0, 0, 0.25)',
         'sage/30': '0 10px 40px -10px rgba(190, 227, 190, 0.3)',
@@ -64,6 +62,8 @@ export default {
         'slideUpStagger': 'slideUpStagger 0.6s ease-out forwards',
         'bounceIn': 'bounceIn 0.6s ease-out',
         'modalSlideUp': 'modalSlideUp 0.4s ease-out',
+        'fadeInGridItem': 'fadeInGridItem 0.6s ease-out forwards',
+        'fadeInModal': 'fadeInModal 0.5s ease-in-out forwards',
       },
       keyframes: {
         'gentle-float': {
@@ -80,41 +80,42 @@ export default {
           '50%': { transform: 'translateY(-4px)' },
         },
         'float-random': {
-          '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-          '33%': { transform: 'translateY(-10px) rotate(120deg)' },
-          '66%': { transform: 'translateY(5px) rotate(240deg)' },
+          '0%': { transform: 'translate(0, 0)' },
+          '25%': { transform: 'translate(-10px, -10px)' },
+          '50%': { transform: 'translate(10px, -5px)' },
+          '75%': { transform: 'translate(-5px, 10px)' },
+          '100%': { transform: 'translate(0, 0)' },
         },
-        'fadeIn': {
-          'from': { opacity: '0' },
-          'to': { opacity: '1' },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
-        'fadeInUp': {
-          'from': { opacity: '0', transform: 'translateY(30px)' },
-          'to': { opacity: '1', transform: 'translateY(0)' },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        'slideUpStagger': {
-          'from': { opacity: '0', transform: 'translateY(40px) scale(0.95)' },
-          'to': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        slideUpStagger: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        'bounceIn': {
+        bounceIn: {
           '0%': { opacity: '0', transform: 'scale(0.3)' },
           '50%': { opacity: '1', transform: 'scale(1.05)' },
           '70%': { transform: 'scale(0.9)' },
           '100%': { transform: 'scale(1)' },
         },
-        'modalSlideUp': {
-          'from': { opacity: '0', transform: 'translateY(50px) scale(0.95)' },
-          'to': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        modalSlideUp: {
+          '0%': { opacity: '0', transform: 'translateY(100px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-      },
-      transitionTimingFunction: {
-        'elastic': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        'creative': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        'smooth-out': 'cubic-bezier(0.25, 1, 0.5, 1)',
-        'ease-out-bounce': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-      },
-      perspective: {
-        '1000': '1000px',
+        fadeInGridItem: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        fadeInModal: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
       },
     },
   },
