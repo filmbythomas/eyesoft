@@ -15,15 +15,15 @@ const PortfolioPage: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<PortfolioImage | null>(null);
 
   const portfolioImages: PortfolioImage[] = [
-    ...Array.from({ length: 18 }, (_, i) => ({
+    ...Array.from({ length: 45 }, (_, i) => ({
       id: i + 1,
-      src: `/portfolio/athletics/sample-${i + 1}.jpg`,
+      src: `/athletics/sports(${i + 1}).jpg`,
       alt: `Athletics Photo ${i + 1}`,
       category: 'athletics',
     })),
-    ...Array.from({ length: 12 }, (_, i) => ({
-      id: i + 19,
-      src: `/portfolio/portraits/sample-${(i % 12) + 1}.jpg`,
+    ...Array.from({ length: 16 }, (_, i) => ({
+      id: i + 46,
+      src: `/portraits/portrait (${i + 1}).jpg`,
       alt: `Portrait Photo ${i + 1}`,
       category: 'portraits',
     })),
