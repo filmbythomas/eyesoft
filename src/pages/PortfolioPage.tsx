@@ -13,21 +13,36 @@ interface PortfolioImage {
 const PortfolioPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category>(null);
   const [selectedImage, setSelectedImage] = useState<PortfolioImage | null>(null);
+  const [portfolioImages, setPortfolioImages] = useState<PortfolioImage[]>([]);
 
-  const portfolioImages: PortfolioImage[] = [
-    ...Array.from({ length: 45 }, (_, i) => ({
-      id: i + 1,
-      src: `/athletics/sports(${i + 1}).jpg`,
-      alt: `Athletics Photo ${i + 1}`,
-      category: 'athletics',
-    })),
-    ...Array.from({ length: 16 }, (_, i) => ({
-      id: i + 46,
-      src: `/portraits/portrait (${i + 1}).jpg`,
-      alt: `Portrait Photo ${i + 1}`,
-      category: 'portraits',
-    })),
-  ];
+  useEffect(() => {
+    const loadImages = async () => {
+      const athleticsContext = (window as any).__athleticsImages__;
+      const portraitsContext = (window as any).__portraitsImages__;
+
+      const athletics: PortfolioImage[] = (athleticsContext || []).map((filename: string, index: number) => ({
+        id: index + 1,
+        src: `/athletics/${filename}`,
+        alt: `Athletics Photo ${index + 1}`,
+        category: 'athletics',
+      }));
+
+      const portraits: PortfolioImage[] = (portraitsContext || []).map((filename: string, index: number) => ({
+        id: index + athletics.length + 1,
+        src: `/portraits/${filename}`,
+        alt: `Portrait Photo ${index + 1}`,
+        category: 'portraits',
+      }));
+
+      setPortfolioImages([...athletics, ...portraits]);
+    };
+
+    // Simulate dynamic image discovery (REPLACE THIS in actual dev with a build-time step or server-side list)
+    (window as any).__athleticsImages__ = Array.from({ length: 45 }, (_, i) => `sports${i + 1}.jpg`);
+    (window as any).__portraitsImages__ = Array.from({ length: 16 }, (_, i) => `portrait${i + 1}.jpg`);
+
+    loadImages();
+  }, []);
 
   const filteredImages = activeCategory
     ? portfolioImages.filter((img) => img.category === activeCategory)
@@ -108,11 +123,9 @@ const PortfolioPage: React.FC = () => {
     );
   }
 
-  // Category view
   return (
     <div className="min-h-screen bg-cream relative pt-20">
       <div className="px-6 lg:px-16 py-8 md:py-12">
-        {/* Back Button */}
         <button
           onClick={() => setActiveCategory(null)}
           className="mb-12 mt-28 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
@@ -122,7 +135,6 @@ const PortfolioPage: React.FC = () => {
           Back to Portfolio
         </button>
 
-        {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-6xl font-caveat font-bold text-forest animate-fadeInUp">
             {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Portfolio
@@ -134,7 +146,6 @@ const PortfolioPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Image Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {filteredImages.map((image, index) => (
             <div
@@ -171,7 +182,6 @@ const PortfolioPage: React.FC = () => {
         )}
       </div>
 
-      {/* Image Modal */}
       {selectedImage && (
         <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
           <div className="relative max-w-5xl w-full max-h-[90vh]">
