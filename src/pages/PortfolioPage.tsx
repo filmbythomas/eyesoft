@@ -42,9 +42,7 @@ const PortfolioPage: React.FC = () => {
 
   if (!activeCategory) {
     return (
-      <div
-        className="min-h-screen bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden pt-20"
-      >
+      <div className="min-h-screen bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden pt-20">
         {/* Animated Leaves */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {[...Array(20)].map((_, i) => (
@@ -110,7 +108,7 @@ const PortfolioPage: React.FC = () => {
     );
   }
 
-  // Category view (athletics or portraits)
+  // Category view
   return (
     <div className="min-h-screen bg-cream relative pt-20">
       <div className="px-6 lg:px-16 py-8 md:py-12">
