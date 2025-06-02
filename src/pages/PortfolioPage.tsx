@@ -19,30 +19,31 @@ const PortfolioPage: React.FC = () => {
       id: i + 1,
       src: `/portfolio/athletics/sample-${i + 1}.jpg`,
       alt: `Athletics Photo ${i + 1}`,
-      category: 'athletics'
+      category: 'athletics',
     })),
     ...Array.from({ length: 12 }, (_, i) => ({
       id: i + 19,
       src: `/portfolio/portraits/sample-${(i % 12) + 1}.jpg`,
       alt: `Portrait Photo ${i + 1}`,
-      category: 'portraits'
-    }))
+      category: 'portraits',
+    })),
   ];
 
-  const filteredImages = activeCategory 
-    ? portfolioImages.filter(img => img.category === activeCategory)
+  const filteredImages = activeCategory
+    ? portfolioImages.filter((img) => img.category === activeCategory)
     : [];
 
   useEffect(() => {
     document.body.style.overflow = selectedImage ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [selectedImage]);
 
   if (!activeCategory) {
     return (
       <div
         className="min-h-screen bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden pt-20"
-        style={{ backgroundImage: "url('/portfolio/portfoliopagebg.png')" }}
       >
         {/* Animated Leaves */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -54,7 +55,7 @@ const PortfolioPage: React.FC = () => {
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
                 animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${3 + Math.random() * 4}s`
+                animationDuration: `${3 + Math.random() * 4}s`,
               }}
             >
               <Leaf size={12 + Math.random() * 16} className="text-forest/40" />
@@ -62,20 +63,7 @@ const PortfolioPage: React.FC = () => {
           ))}
         </div>
 
-
-  return (
-    <div className="min-h-screen bg-white bg-cover bg-center bg-no-repeat relative pt-20">
-      <div className="px-6 lg:px-16 py-8 md:py-12">
-        {/* Back Button */}
-        <button
-          onClick={() => setActiveCategory(null)}
-          className="mb-12 mt-4 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
-        >
-          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <Leaf size={16} className="text-sage" />
-          Back to Portfolio
-        </button>
-
+        {/* Landing UI */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-36 md:pt-48 pb-24">
           <h1 className="text-7xl md:text-8xl font-caveat font-bold text-forest mb-6 animate-fadeInUp">
             Explore My Work
@@ -122,6 +110,7 @@ const PortfolioPage: React.FC = () => {
     );
   }
 
+  // Category view (athletics or portraits)
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat relative pt-20"
