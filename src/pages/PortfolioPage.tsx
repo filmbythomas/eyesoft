@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Camera, Zap, Users, ArrowLeft, Leaf } from 'lucide-react';
 
 type Category = 'athletics' | 'portraits' | null;
@@ -13,40 +13,41 @@ interface PortfolioImage {
 const PortfolioPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category>(null);
   const [selectedImage, setSelectedImage] = useState<PortfolioImage | null>(null);
-  const [portfolioImages, setPortfolioImages] = useState<PortfolioImage[]>([]);
+  const [validImages, setValidImages] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    const loadImages = async () => {
-      const athleticsContext = (window as any).__athleticsImages__;
-      const portraitsContext = (window as any).__portraitsImages__;
+  const generateImages = (category: 'athletics' | 'portraits', max: number): PortfolioImage[] => {
+    return Array.from({ length: max }, (_, i) => {
+      const filename =
+        category === 'athletics'
+          ? `/athletics/sports(${i + 1}).jpg`
+          : `/portraits/portrait (${i + 1}).jpg`;
+      return {
+        id: i + 1,
+        src: filename,
+        alt: `${category === 'athletics' ? 'Athletics' : 'Portrait'} Photo ${i + 1}`,
+        category,
+      };
+    });
+  };
 
-      const athletics: PortfolioImage[] = (athleticsContext || []).map((filename: string, index: number) => ({
-        id: index + 1,
-        src: `/athletics/${filename}`,
-        alt: `Athletics Photo ${index + 1}`,
-        category: 'athletics',
-      }));
-
-      const portraits: PortfolioImage[] = (portraitsContext || []).map((filename: string, index: number) => ({
-        id: index + athletics.length + 1,
-        src: `/portraits/${filename}`,
-        alt: `Portrait Photo ${index + 1}`,
-        category: 'portraits',
-      }));
-
-      setPortfolioImages([...athletics, ...portraits]);
-    };
-
-    // Simulate dynamic image discovery (REPLACE THIS in actual dev with a build-time step or server-side list)
-    (window as any).__athleticsImages__ = Array.from({ length: 45 }, (_, i) => `sports${i + 1}.jpg`);
-    (window as any).__portraitsImages__ = Array.from({ length: 16 }, (_, i) => `portrait${i + 1}.jpg`);
-
-    loadImages();
+  const allImages = useMemo(() => {
+    const athletics = generateImages('athletics', 100); // Try up to 100 sports images
+    const portraits = generateImages('portraits', 100);  // Try up to 100 portrait images
+    return [...athletics, ...portraits];
   }, []);
 
-  const filteredImages = activeCategory
-    ? portfolioImages.filter((img) => img.category === activeCategory)
-    : [];
+  const [filteredImages, setFilteredImages] = useState<PortfolioImage[]>([]);
+
+  useEffect(() => {
+    if (activeCategory) {
+      const filtered = allImages.filter(
+        (img) => img.category === activeCategory && validImages.has(img.src)
+      );
+      setFilteredImages(filtered);
+    } else {
+      setFilteredImages([]);
+    }
+  }, [activeCategory, allImages, validImages]);
 
   useEffect(() => {
     document.body.style.overflow = selectedImage ? 'hidden' : '';
@@ -54,6 +55,25 @@ const PortfolioPage: React.FC = () => {
       document.body.style.overflow = '';
     };
   }, [selectedImage]);
+
+  // Prefetch and validate images
+  useEffect(() => {
+    const checkImages = async () => {
+      const results = await Promise.all(
+        allImages.map((img) => {
+          return new Promise<{ src: string; valid: boolean }>((resolve) => {
+            const imgEl = new Image();
+            imgEl.src = img.src;
+            imgEl.onload = () => resolve({ src: img.src, valid: true });
+            imgEl.onerror = () => resolve({ src: img.src, valid: false });
+          });
+        })
+      );
+      const validSet = new Set(results.filter((r) => r.valid).map((r) => r.src));
+      setValidImages(validSet);
+    };
+    checkImages();
+  }, [allImages]);
 
   if (!activeCategory) {
     return (
@@ -86,7 +106,6 @@ const PortfolioPage: React.FC = () => {
           </p>
 
           <div className="flex flex-col md:flex-row gap-10">
-            {/* Athletics Card */}
             <button
               onClick={() => setActiveCategory('athletics')}
               className="group w-80 h-96 rounded-3xl overflow-hidden shadow-pop hover:shadow-3xl hover:scale-105 transition-all animate-fadeInUp animation-delay-500 relative"
@@ -102,7 +121,6 @@ const PortfolioPage: React.FC = () => {
               </div>
             </button>
 
-            {/* Portraits Card */}
             <button
               onClick={() => setActiveCategory('portraits')}
               className="group w-80 h-96 rounded-3xl overflow-hidden shadow-pop hover:shadow-3xl hover:scale-105 transition-all animate-fadeInUp animation-delay-700 relative"
