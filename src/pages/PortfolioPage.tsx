@@ -112,15 +112,12 @@ const PortfolioPage: React.FC = () => {
 
   // Category view (athletics or portraits)
   return (
-    <div
-      className="min-h-screen bg-cover bg-center bg-no-repeat relative pt-20"
-      style={{ backgroundImage: "url('/portfolio/portfoliopagebg.png')" }}
-    >
+    <div className="min-h-screen bg-cream relative pt-20">
       <div className="px-6 lg:px-16 py-8 md:py-12">
         {/* Back Button */}
         <button
           onClick={() => setActiveCategory(null)}
-          className="mb-12 mt-4 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
+          className="mb-12 mt-28 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
         >
           <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
           <Leaf size={16} className="text-sage" />
