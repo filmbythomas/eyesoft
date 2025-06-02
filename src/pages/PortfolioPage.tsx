@@ -62,6 +62,20 @@ const PortfolioPage: React.FC = () => {
           ))}
         </div>
 
+
+  return (
+    <div className="min-h-screen bg-white bg-cover bg-center bg-no-repeat relative pt-20">
+      <div className="px-6 lg:px-16 py-8 md:py-12">
+        {/* Back Button */}
+        <button
+          onClick={() => setActiveCategory(null)}
+          className="mb-12 mt-4 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
+        >
+          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+          <Leaf size={16} className="text-sage" />
+          Back to Portfolio
+        </button>
+
         <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-36 md:pt-48 pb-24">
           <h1 className="text-7xl md:text-8xl font-caveat font-bold text-forest mb-6 animate-fadeInUp">
             Explore My Work
