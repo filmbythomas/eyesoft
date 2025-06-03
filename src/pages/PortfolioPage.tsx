@@ -197,15 +197,19 @@ const PortfolioPage: React.FC = () => {
         </div>
 
         {filteredImages.length === 0 && (
-  <div className="text-center py-20">
-    <Camera size={64} className="mx-auto text-charcoal/40 mb-4" />
-    <h3 className="text-2xl font-caveat text-charcoal">Coming Soon</h3>
-    <p className="text-charcoal/70 font-inter">
-      {activeCategory === 'athletics'
-        ? 'Stay tuned for new sports captures!'
-        : 'New portrait sessions will appear here soon.'}
-    </p>
-  </div>
-)}
+          <div className="text-center py-20">
+            <Camera size={64} className="mx-auto text-charcoal/40 mb-4" />
+            <h3 className="text-2xl font-caveat text-charcoal">Coming Soon</h3>
+            <p className="text-charcoal/70 font-inter">
+              {activeCategory === 'athletics'
+                ? 'Check back soon for fresh athletic captures!'
+                : 'New portrait sessions will be uploaded here shortly.'}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
- 
+export default PortfolioPage;
