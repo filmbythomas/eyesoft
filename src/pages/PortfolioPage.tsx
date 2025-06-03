@@ -19,8 +19,8 @@ const PortfolioPage: React.FC = () => {
     return Array.from({ length: max }, (_, i) => {
       const filename =
         category === 'athletics'
-          ? `/athletics/sports(${i + 1}).jpg`
-          : `/portraits/portrait (${i + 1}).jpg`;
+          ? `portfolio/athletics/sports(${i + 1}).jpg`
+          : `portfolio/portraits/portrait (${i + 1}).jpg`;
       return {
         id: i + 1,
         src: filename,
