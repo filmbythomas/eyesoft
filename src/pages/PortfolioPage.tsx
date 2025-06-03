@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, Zap, Users, ArrowLeft, Leaf } from 'lucide-react';
+import { Camera, Zap, Users, ArrowLeft, Leaf, ArrowRight, Heart } from 'lucide-react';
 
 type Category = 'athletics' | 'portraits' | null;
 
@@ -41,6 +41,22 @@ const PortfolioPage: React.FC = () => {
     ? portfolioImages.filter((img) => img.category === activeCategory)
     : [];
 
+  const currentIndex = selectedImage
+    ? filteredImages.findIndex((img) => img.id === selectedImage.id)
+    : -1;
+
+  const handlePrev = () => {
+    if (selectedImage && currentIndex > 0) {
+      setSelectedImage(filteredImages[currentIndex - 1]);
+    }
+  };
+
+  const handleNext = () => {
+    if (selectedImage && currentIndex < filteredImages.length - 1) {
+      setSelectedImage(filteredImages[currentIndex + 1]);
+    }
+  };
+
   useEffect(() => {
     document.body.style.overflow = selectedImage ? 'hidden' : '';
     return () => {
@@ -51,7 +67,6 @@ const PortfolioPage: React.FC = () => {
   if (!activeCategory) {
     return (
       <div className="min-h-screen bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden pt-20">
-        {/* Animated Leaves */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {[...Array(20)].map((_, i) => (
             <div
@@ -69,7 +84,6 @@ const PortfolioPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Landing UI */}
         <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-36 md:pt-48 pb-24">
           <h1 className="text-7xl md:text-8xl font-caveat font-bold text-forest mb-6 animate-fadeInUp">
             Explore My Work
@@ -79,7 +93,6 @@ const PortfolioPage: React.FC = () => {
           </p>
 
           <div className="flex flex-col md:flex-row gap-10">
-            {/* Athletics Card */}
             <button
               onClick={() => setActiveCategory('athletics')}
               className="group w-80 h-96 rounded-3xl overflow-hidden shadow-pop hover:shadow-3xl hover:scale-105 transition-all animate-fadeInUp animation-delay-500 relative"
@@ -95,7 +108,6 @@ const PortfolioPage: React.FC = () => {
               </div>
             </button>
 
-            {/* Portraits Card */}
             <button
               onClick={() => setActiveCategory('portraits')}
               className="group w-80 h-96 rounded-3xl overflow-hidden shadow-pop hover:shadow-3xl hover:scale-105 transition-all animate-fadeInUp animation-delay-700 relative"
@@ -116,21 +128,18 @@ const PortfolioPage: React.FC = () => {
     );
   }
 
-  // Category view
   return (
     <div className="min-h-screen bg-cream relative pt-20">
       <div className="px-6 lg:px-16 py-8 md:py-12">
-        {/* Back Button */}
         <button
           onClick={() => setActiveCategory(null)}
           className="mb-12 mt-28 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
         >
-          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+          <ArrowLeft size={20} />
           <Leaf size={16} className="text-sage" />
           Back to Portfolio
         </button>
 
-        {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-6xl font-caveat font-bold text-forest animate-fadeInUp">
             {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Portfolio
@@ -142,7 +151,6 @@ const PortfolioPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Image Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {filteredImages.map((image, index) => (
             <div
@@ -180,6 +188,72 @@ const PortfolioPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {selectedImage && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center px-4">
+          <button
+            className="absolute top-6 right-6 text-white text-xl"
+            onClick={() => setSelectedImage(null)}
+          >
+            ✕
+          </button>
+
+          <div className="relative max-w-4xl w-full bg-white p-4 rounded-xl shadow-xl">
+            <div className="relative aspect-video overflow-hidden rounded-lg border-4 border-sage">
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.alt}
+                className="object-contain w-full h-full"
+              />
+            </div>
+
+            {/* Navigation */}
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={handlePrev}
+                disabled={currentIndex === 0}
+                className="text-sage disabled:opacity-30"
+              >
+                <ArrowLeft size={28} />
+              </button>
+
+              <button
+                onClick={handleNext}
+                disabled={currentIndex === filteredImages.length - 1}
+                className="text-sage disabled:opacity-30"
+              >
+                <ArrowRight size={28} />
+              </button>
+            </div>
+
+            {/* Preview Strip */}
+            <div className="flex justify-center gap-4 mt-4 overflow-x-auto">
+              {filteredImages
+                .slice(Math.max(0, currentIndex - 1), currentIndex + 2)
+                .map((img) => (
+                  <img
+                    key={img.id}
+                    src={img.src}
+                    alt={img.alt}
+                    onClick={() => setSelectedImage(img)}
+                    className={`w-20 h-20 object-cover rounded-md cursor-pointer transition-all border ${
+                      img.id === selectedImage.id
+                        ? 'border-sage scale-110'
+                        : 'opacity-50 hover:opacity-100'
+                    }`}
+                  />
+                ))}
+            </div>
+
+            {/* Like Button */}
+            <div className="flex justify-center mt-4">
+              <button className="text-rose-500 hover:text-rose-600 transition">
+                <Heart size={28} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
