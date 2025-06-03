@@ -16,54 +16,26 @@ const PortfolioPage: React.FC = () => {
   const [portfolioImages, setPortfolioImages] = useState<PortfolioImage[]>([]);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      const athleticsImages = await fetchImageList('/portfolio/athletics');
-      const portraitImages = await fetchImageList('/portfolio/portraits');
+    const athleticsImages = Object.keys(import.meta.glob('/public/portfolio/athletics/*.{jpg,jpeg,png,gif}', { eager: true }));
+    const portraitImages = Object.keys(import.meta.glob('/public/portfolio/portraits/*.{jpg,jpeg,png,gif}', { eager: true }));
 
-      const allImages = [
-        ...athleticsImages.map((src, index) => ({
-          id: index + 1,
-          src,
-          alt: `Athletics Photo ${index + 1}`,
-          category: 'athletics' as const,
-        })),
-        ...portraitImages.map((src, index) => ({
-          id: athleticsImages.length + index + 1,
-          src,
-          alt: `Portrait Photo ${index + 1}`,
-          category: 'portraits' as const,
-        })),
-      ];
+    const allImages: PortfolioImage[] = [
+      ...athleticsImages.map((path, index) => ({
+        id: index + 1,
+        src: path.replace('/public', ''),
+        alt: `Athletics Photo ${index + 1}`,
+        category: 'athletics' as const,
+      })),
+      ...portraitImages.map((path, index) => ({
+        id: athleticsImages.length + index + 1,
+        src: path.replace('/public', ''),
+        alt: `Portrait Photo ${index + 1}`,
+        category: 'portraits' as const,
+      })),
+    ];
 
-      setPortfolioImages(allImages);
-    };
-
-    fetchImages();
+    setPortfolioImages(allImages);
   }, []);
-
-  const fetchImageList = async (folderPath: string): Promise<string[]> => {
-    try {
-      const response = await fetch(folderPath);
-      const text = await response.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(text, 'text/html');
-      const links = Array.from(doc.querySelectorAll('a'))
-        .map((a) => a.getAttribute('href'))
-        .filter(
-          (href) =>
-            href &&
-            (href.endsWith('.jpg') ||
-              href.endsWith('.jpeg') ||
-              href.endsWith('.png') ||
-              href.endsWith('.gif'))
-        )
-        .map((href) => `${folderPath}/${href}`);
-      return links;
-    } catch (error) {
-      console.error(`Error fetching images from ${folderPath}:`, error);
-      return [];
-    }
-  };
 
   const filteredImages = activeCategory
     ? portfolioImages.filter((img) => img.category === activeCategory)
