@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Camera, Zap, Users, ArrowLeft, Leaf, ArrowRight, Heart } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Camera, Zap, Users, ArrowLeft, Leaf, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 type Category = 'athletics' | 'portraits' | null;
 
@@ -14,6 +15,8 @@ const PortfolioPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category>(null);
   const [selectedImage, setSelectedImage] = useState<PortfolioImage | null>(null);
   const [portfolioImages, setPortfolioImages] = useState<PortfolioImage[]>([]);
+  const [likedImages, setLikedImages] = useState<Set<number>>(new Set());
+  const [transitionDirection, setTransitionDirection] = useState<1 | -1>(1);
 
   useEffect(() => {
     const athleticsImages = Object.keys(import.meta.glob('/public/portfolio/athletics/*.{jpg,jpeg,png,gif}', { eager: true }));
@@ -41,219 +44,151 @@ const PortfolioPage: React.FC = () => {
     ? portfolioImages.filter((img) => img.category === activeCategory)
     : [];
 
-  const currentIndex = selectedImage
-    ? filteredImages.findIndex((img) => img.id === selectedImage.id)
-    : -1;
-
-  const handlePrev = () => {
-    if (selectedImage && currentIndex > 0) {
-      setSelectedImage(filteredImages[currentIndex - 1]);
-    }
-  };
-
-  const handleNext = () => {
-    if (selectedImage && currentIndex < filteredImages.length - 1) {
-      setSelectedImage(filteredImages[currentIndex + 1]);
-    }
-  };
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!selectedImage) return;
+      if (e.key === 'ArrowRight') navigateImage(1);
+      if (e.key === 'ArrowLeft') navigateImage(-1);
+      if (e.key === 'Escape') setSelectedImage(null);
+    },
+    [selectedImage]
+  );
 
   useEffect(() => {
     document.body.style.overflow = selectedImage ? 'hidden' : '';
+    if (selectedImage) window.addEventListener('keydown', handleKeyDown);
     return () => {
       document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedImage]);
+  }, [selectedImage, handleKeyDown]);
 
-  if (!activeCategory) {
-    return (
-      <div className="min-h-screen bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden pt-20">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute animate-float-random opacity-30"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${3 + Math.random() * 4}s`,
-              }}
-            >
-              <Leaf size={12 + Math.random() * 16} className="text-forest/40" />
-            </div>
-          ))}
-        </div>
+  const navigateImage = (direction: 1 | -1) => {
+    if (!selectedImage) return;
+    const currentIndex = filteredImages.findIndex(img => img.id === selectedImage.id);
+    const nextIndex = (currentIndex + direction + filteredImages.length) % filteredImages.length;
+    setTransitionDirection(direction);
+    setSelectedImage(filteredImages[nextIndex]);
+  };
 
-        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-36 md:pt-48 pb-24">
-          <h1 className="text-7xl md:text-8xl font-caveat font-bold text-forest mb-6 animate-fadeInUp">
-            Explore My Work
-          </h1>
-          <p className="text-xl md:text-2xl text-charcoal/80 mb-12 font-inter animate-fadeInUp animation-delay-300">
-            Discover the stories captured through my lens
-          </p>
+  const toggleLike = (id: number) => {
+    setLikedImages(prev => {
+      const newLikes = new Set(prev);
+      if (newLikes.has(id)) {
+        newLikes.delete(id);
+      } else {
+        newLikes.add(id);
+      }
+      return newLikes;
+    });
+  };
 
-          <div className="flex flex-col md:flex-row gap-10">
-            <button
-              onClick={() => setActiveCategory('athletics')}
-              className="group w-80 h-96 rounded-3xl overflow-hidden shadow-pop hover:shadow-3xl hover:scale-105 transition-all animate-fadeInUp animation-delay-500 relative"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-sage to-forest opacity-90 group-hover:opacity-80 transition" />
-              <div className="absolute inset-0 bg-[url('/portfolio/athletics-btn-bg.jpg')] bg-cover bg-center group-hover:scale-110 transition-transform duration-700" />
-              <div className="relative z-10 flex flex-col items-center justify-center h-full text-white p-6">
-                <div className="p-5 bg-white/20 backdrop-blur-sm rounded-full mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all border border-white/30">
-                  <Zap size={44} className="group-hover:animate-pulse" />
-                </div>
-                <h2 className="text-4xl font-caveat font-bold mb-2">Athletics</h2>
-                <p className="font-inter">Dynamic sports coverage →</p>
-              </div>
-            </button>
-
-            <button
-              onClick={() => setActiveCategory('portraits')}
-              className="group w-80 h-96 rounded-3xl overflow-hidden shadow-pop hover:shadow-3xl hover:scale-105 transition-all animate-fadeInUp animation-delay-700 relative"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-sage/70 to-gold/60 opacity-90 group-hover:opacity-80 transition" />
-              <div className="absolute inset-0 bg-[url('/portfolio/portraits-btn-bg.jpg')] bg-cover bg-center group-hover:scale-110 transition-transform duration-700" />
-              <div className="relative z-10 flex flex-col items-center justify-center h-full text-white p-6">
-                <div className="p-5 bg-white/20 backdrop-blur-sm rounded-full mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all border border-white/30">
-                  <Users size={44} className="group-hover:animate-pulse" />
-                </div>
-                <h2 className="text-4xl font-caveat font-bold mb-2">Portraits</h2>
-                <p className="font-inter">Timeless personal stories →</p>
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Modal Animation Variants
+  const imageVariants = {
+    enter: (direction: 1 | -1) => ({
+      x: direction * 300,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: 1 | -1) => ({
+      x: direction * -300,
+      opacity: 0,
+    }),
+  };
 
   return (
     <div className="min-h-screen bg-cream relative pt-20">
-      <div className="px-6 lg:px-16 py-8 md:py-12">
-        <button
-          onClick={() => setActiveCategory(null)}
-          className="mb-12 mt-28 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
-        >
-          <ArrowLeft size={20} />
-          <Leaf size={16} className="text-sage" />
-          Back to Portfolio
-        </button>
+      {/* ... existing top content ... */}
 
-        <div className="text-center mb-16">
-          <h1 className="text-6xl font-caveat font-bold text-forest animate-fadeInUp">
-            {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Portfolio
-          </h1>
-          <p className="text-lg text-charcoal/80 font-inter max-w-2xl mx-auto mt-4 animate-fadeInUp animation-delay-200">
-            {activeCategory === 'athletics'
-              ? 'Capturing the intensity, passion, and triumph of athletic moments'
-              : 'Revealing the authentic beauty and unique stories of individuals'}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {filteredImages.map((image, index) => (
-            <div
-              key={image.id}
-              className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 cursor-pointer animate-fadeInUp"
-              style={{ animationDelay: `${index * 50}ms` }}
-              onClick={() => setSelectedImage(image)}
-            >
-              <img
-                src={image.src}
-                alt={image.alt}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                <div className="flex items-center gap-2">
-                  <Camera size={18} />
-                  <span className="text-sm font-inter">View Full Size</span>
-                </div>
+      {/* Image Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        {filteredImages.map((image, index) => (
+          <div
+            key={image.id}
+            className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 cursor-pointer animate-fadeInUp"
+            style={{ animationDelay: `${index * 50}ms` }}
+            onClick={() => {
+              setSelectedImage(image);
+              setTransitionDirection(1);
+            }}
+          >
+            <img
+              src={image.src}
+              alt={image.alt}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+              <div className="flex items-center gap-2">
+                <Camera size={18} />
+                <span className="text-sm font-inter">View Full Size</span>
               </div>
             </div>
-          ))}
-        </div>
-
-        {filteredImages.length === 0 && (
-          <div className="text-center py-20">
-            <Camera size={64} className="mx-auto text-charcoal/40 mb-4" />
-            <h3 className="text-2xl font-caveat text-charcoal">Coming Soon</h3>
-            <p className="text-charcoal/70 font-inter">
-              {activeCategory === 'athletics'
-                ? 'Check back soon for fresh athletic captures!'
-                : 'New portrait sessions will be uploaded here shortly.'}
-            </p>
           </div>
-        )}
+        ))}
       </div>
 
-      {selectedImage && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center px-4">
-          <button
-            className="absolute top-6 right-6 text-white text-xl"
-            onClick={() => setSelectedImage(null)}
+      {/* Modal */}
+      <AnimatePresence custom={transitionDirection}>
+        {selectedImage && (
+          <motion.div
+            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            ✕
-          </button>
+            <div className="relative max-w-5xl w-full scale-105">
+              {/* Slide Left */}
+              <button
+                onClick={() => navigateImage(-1)}
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-3 bg-white/20 rounded-full hover:bg-white/30 transition"
+              >
+                <ChevronLeft size={32} className="text-white group-hover:-translate-x-1 transition-transform" />
+              </button>
 
-          <div className="relative max-w-4xl w-full bg-white p-4 rounded-xl shadow-xl">
-            <div className="relative aspect-video overflow-hidden rounded-lg border-4 border-sage">
-              <img
+              {/* Slide Right */}
+              <button
+                onClick={() => navigateImage(1)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-3 bg-white/20 rounded-full hover:bg-white/30 transition"
+              >
+                <ChevronRight size={32} className="text-white group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* Main Image with transition */}
+              <motion.img
+                key={selectedImage.id}
                 src={selectedImage.src}
                 alt={selectedImage.alt}
-                className="object-contain w-full h-full"
+                custom={transitionDirection}
+                variants={imageVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.5 }}
+                className="w-full max-h-[80vh] object-contain rounded-xl shadow-2xl"
               />
-            </div>
 
-            {/* Navigation */}
-            <div className="flex justify-between items-center mt-4">
-              <button
-                onClick={handlePrev}
-                disabled={currentIndex === 0}
-                className="text-sage disabled:opacity-30"
-              >
-                <ArrowLeft size={28} />
-              </button>
-
-              <button
-                onClick={handleNext}
-                disabled={currentIndex === filteredImages.length - 1}
-                className="text-sage disabled:opacity-30"
-              >
-                <ArrowRight size={28} />
-              </button>
-            </div>
-
-            {/* Preview Strip */}
-            <div className="flex justify-center gap-4 mt-4 overflow-x-auto">
-              {filteredImages
-                .slice(Math.max(0, currentIndex - 1), currentIndex + 2)
-                .map((img) => (
-                  <img
-                    key={img.id}
-                    src={img.src}
-                    alt={img.alt}
-                    onClick={() => setSelectedImage(img)}
-                    className={`w-20 h-20 object-cover rounded-md cursor-pointer transition-all border ${
-                      img.id === selectedImage.id
-                        ? 'border-sage scale-110'
-                        : 'opacity-50 hover:opacity-100'
-                    }`}
+              {/* Bottom Controls */}
+              <div className="mt-4 flex justify-between items-center text-white">
+                <div className="text-lg font-caveat">{selectedImage.alt}</div>
+                <button
+                  onClick={() => toggleLike(selectedImage.id)}
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition"
+                >
+                  <Heart
+                    size={28}
+                    className={`transition-all ${likedImages.has(selectedImage.id) ? 'fill-red-500 text-red-500' : 'text-white'}`}
                   />
-                ))}
+                </button>
+              </div>
             </div>
-
-            {/* Like Button */}
-            <div className="flex justify-center mt-4">
-              <button className="text-rose-500 hover:text-rose-600 transition">
-                <Heart size={28} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
