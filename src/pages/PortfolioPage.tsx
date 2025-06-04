@@ -17,6 +17,7 @@ const PortfolioPage: React.FC = () => {
   const [portfolioImages, setPortfolioImages] = useState<PortfolioImage[]>([]);
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set());
   const [imageKey, setImageKey] = useState(0);
+  const [likeCountMap, setLikeCountMap] = useState<Record<number, number>>({});
 
   useEffect(() => {
     const athleticsImages = Object.keys(import.meta.glob('/public/portfolio/athletics/*.{jpg,jpeg,png,gif}', { eager: true }));
@@ -42,17 +43,25 @@ const PortfolioPage: React.FC = () => {
 
   useEffect(() => {
     const saved = localStorage.getItem('likedImages');
+    const counts = localStorage.getItem('likeCountMap');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         setLikedImages(new Set(parsed));
       } catch {}
     }
+    if (counts) {
+      try {
+        const parsedMap = JSON.parse(counts);
+        setLikeCountMap(parsedMap);
+      } catch {}
+    }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('likedImages', JSON.stringify(Array.from(likedImages)));
-  }, [likedImages]);
+    localStorage.setItem('likeCountMap', JSON.stringify(likeCountMap));
+  }, [likedImages, likeCountMap]);
 
   const filteredImages = activeCategory
     ? portfolioImages.filter((img) => img.category === activeCategory)
@@ -79,8 +88,15 @@ const PortfolioPage: React.FC = () => {
   const toggleLike = (id: number) => {
     setLikedImages(prev => {
       const updated = new Set(prev);
-      if (updated.has(id)) updated.delete(id);
-      else updated.add(id);
+      const newCountMap = { ...likeCountMap };
+      if (updated.has(id)) {
+        updated.delete(id);
+        newCountMap[id] = Math.max((newCountMap[id] || 1) - 1, 0);
+      } else {
+        updated.add(id);
+        newCountMap[id] = (newCountMap[id] || 0) + 1;
+      }
+      setLikeCountMap(newCountMap);
       return updated;
     });
   };
@@ -254,13 +270,19 @@ const PortfolioPage: React.FC = () => {
                 className={clsx(
                   "relative flex flex-col items-center group",
                   likedImages.has(selectedImage.id)
-                    ? "text-yellow-400 scale-110"
+                    ? "text-yellow-400 scale-125 animate-bounce"
                     : "text-gray-400 hover:text-yellow-300"
                 )}
                 onClick={() => toggleLike(selectedImage.id)}
               >
-                <Star size={32} className="transition-transform duration-300 group-hover:scale-125" fill={likedImages.has(selectedImage.id) ? 'currentColor' : 'none'} />
-                <span className="mt-1 text-sm font-semibold text-forest">{likedImages.has(selectedImage.id) ? '1' : '0'} Like</span>
+                <Star
+                  size={36}
+                  className="transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12"
+                  fill={likedImages.has(selectedImage.id) ? 'currentColor' : 'none'}
+                />
+                <span className="mt-2 text-sm font-semibold text-forest">
+                  {likeCountMap[selectedImage.id] || 0} {likeCountMap[selectedImage.id] === 1 ? 'Like' : 'Likes'}
+                </span>
               </button>
             </div>
           </div>
