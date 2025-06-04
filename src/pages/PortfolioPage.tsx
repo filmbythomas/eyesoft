@@ -65,19 +65,19 @@ const PortfolioPage: React.FC = () => {
   const handlePrev = () => {
     if (selectedImage && currentIndex > 0) {
       setSelectedImage(filteredImages[currentIndex - 1]);
-      setImageKey((prev) => prev + 1);
+      setImageKey(prev => prev + 1);
     }
   };
 
   const handleNext = () => {
     if (selectedImage && currentIndex < filteredImages.length - 1) {
       setSelectedImage(filteredImages[currentIndex + 1]);
-      setImageKey((prev) => prev + 1);
+      setImageKey(prev => prev + 1);
     }
   };
 
   const toggleLike = (id: number) => {
-    setLikedImages((prev) => {
+    setLikedImages(prev => {
       const updated = new Set(prev);
       if (updated.has(id)) updated.delete(id);
       else updated.add(id);
@@ -85,15 +85,12 @@ const PortfolioPage: React.FC = () => {
     });
   };
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (!selectedImage) return;
-      if (e.key === 'ArrowLeft') handlePrev();
-      if (e.key === 'ArrowRight') handleNext();
-      if (e.key === 'Escape') setSelectedImage(null);
-    },
-    [selectedImage, currentIndex]
-  );
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (!selectedImage) return;
+    if (e.key === 'ArrowLeft') handlePrev();
+    if (e.key === 'ArrowRight') handleNext();
+    if (e.key === 'Escape') setSelectedImage(null);
+  }, [selectedImage, currentIndex]);
 
   useEffect(() => {
     if (selectedImage) {
@@ -187,7 +184,7 @@ const PortfolioPage: React.FC = () => {
                 style={{ animationDelay: `${index * 50}ms` }}
                 onClick={() => {
                   setSelectedImage(image);
-                  setImageKey((prev) => prev + 1);
+                  setImageKey(prev => prev + 1);
                 }}
               >
                 <img
@@ -210,20 +207,20 @@ const PortfolioPage: React.FC = () => {
       )}
 
       {selectedImage && (
-        <div className="fixed inset-0 z-50 bg-gradient-to-br from-black/90 via-charcoal/90 to-black/90 backdrop-blur-sm flex items-center justify-center px-2 md:px-6 py-6 animate-fadeIn">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
           <button
-            className="absolute top-6 right-6 text-white text-3xl hover:text-rose-400 transition"
+            className="absolute top-4 right-4 text-white text-3xl hover:text-rose-400 transition"
             onClick={() => setSelectedImage(null)}
           >
             ✕
           </button>
 
-          <div className="relative w-full max-w-5xl bg-gradient-to-br from-cream via-white to-sage/40 rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.2)] p-4 sm:p-6 md:p-10 scale-[1] sm:scale-[1.2] transition-transform duration-500">
-            <div key={imageKey} className="relative aspect-video overflow-hidden rounded-2xl border-4 border-sage animate-slideIn">
+          <div className="relative w-full max-w-4xl bg-gradient-to-br from-cream via-white to-sage/40 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.3)] p-4 md:p-8 transition-all">
+            <div key={imageKey} className="relative aspect-video overflow-hidden rounded-xl border-4 border-sage shadow-inner">
               <img src={selectedImage.src} alt={selectedImage.alt} className="object-contain w-full h-full" />
             </div>
 
-            <div className="flex justify-between items-center mt-4 px-4">
+            <div className="flex justify-between items-center mt-6 px-4">
               <button onClick={handlePrev} disabled={currentIndex === 0} className="text-forest disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse">
                 <ArrowLeft size={28} />
               </button>
@@ -232,7 +229,7 @@ const PortfolioPage: React.FC = () => {
               </button>
             </div>
 
-            <div className="flex justify-center gap-4 mt-4 overflow-x-auto px-4">
+            <div className="flex justify-center gap-4 mt-4 flex-wrap px-4">
               {filteredImages.slice(Math.max(0, currentIndex - 1), currentIndex + 2).map((img) => (
                 <img
                   key={img.id}
@@ -240,7 +237,7 @@ const PortfolioPage: React.FC = () => {
                   alt={img.alt}
                   onClick={() => {
                     setSelectedImage(img);
-                    setImageKey((prev) => prev + 1);
+                    setImageKey(prev => prev + 1);
                   }}
                   className={clsx(
                     "w-20 h-20 object-cover rounded-lg cursor-pointer transition-all duration-300",
@@ -255,21 +252,15 @@ const PortfolioPage: React.FC = () => {
             <div className="flex justify-center mt-6">
               <button
                 className={clsx(
-                  "transition-all duration-500 relative",
+                  "relative flex flex-col items-center group",
                   likedImages.has(selectedImage.id)
-                    ? "text-yellow-400 scale-125 animate-wiggle"
+                    ? "text-yellow-400 scale-110"
                     : "text-gray-400 hover:text-yellow-300"
                 )}
                 onClick={() => toggleLike(selectedImage.id)}
               >
-                <Star
-                  size={32}
-                  className="transition-transform duration-500"
-                  fill={likedImages.has(selectedImage.id) ? 'currentColor' : 'none'}
-                />
-                <span className="absolute -right-8 top-1 text-sm text-forest font-semibold">
-                  {likedImages.has(selectedImage.id) ? '1' : '0'}
-                </span>
+                <Star size={32} className="transition-transform duration-300 group-hover:scale-125" fill={likedImages.has(selectedImage.id) ? 'currentColor' : 'none'} />
+                <span className="mt-1 text-sm font-semibold text-forest">{likedImages.has(selectedImage.id) ? '1' : '0'} Like</span>
               </button>
             </div>
           </div>
