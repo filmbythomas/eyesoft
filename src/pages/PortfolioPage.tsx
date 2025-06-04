@@ -16,7 +16,7 @@ const PortfolioPage: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<PortfolioImage | null>(null);
   const [portfolioImages, setPortfolioImages] = useState<PortfolioImage[]>([]);
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set());
-  const [imageKey, setImageKey] = useState(0); // forces image re-animation on change
+  const [imageKey, setImageKey] = useState(0);
 
   useEffect(() => {
     const athleticsImages = Object.keys(import.meta.glob('/public/portfolio/athletics/*.{jpg,jpeg,png,gif}', { eager: true }));
@@ -150,7 +150,7 @@ const PortfolioPage: React.FC = () => {
         <div className="px-6 lg:px-16 py-8 md:py-12">
           <button
             onClick={() => setActiveCategory(null)}
-            className="mb-12 mt-28 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
+            className="mb-12 mt-40 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
           >
             <ArrowLeft size={20} />
             <Leaf size={16} className="text-sage" />
@@ -211,16 +211,16 @@ const PortfolioPage: React.FC = () => {
       )}
 
       {selectedImage && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center px-4 animate-fadeIn">
+        <div className="fixed inset-0 z-50 bg-gradient-to-br from-black/90 via-charcoal/90 to-black/90 flex items-center justify-center px-2 md:px-6 py-6 animate-fadeIn">
           <button
-            className="absolute top-6 right-6 text-white text-xl"
+            className="absolute top-6 right-6 text-white text-3xl hover:text-rose-400 transition"
             onClick={() => setSelectedImage(null)}
           >
             ✕
           </button>
 
-          <div className="relative max-w-4xl w-full bg-white p-4 rounded-xl shadow-xl scale-105 transition-transform duration-300">
-            <div key={imageKey} className="relative aspect-video overflow-hidden rounded-lg border-4 border-sage animate-slideIn">
+          <div className="relative w-full max-w-5xl bg-white rounded-2xl shadow-2xl scale-[1.5] md:scale-125 transition-transform duration-500 p-4 sm:p-6">
+            <div key={imageKey} className="relative aspect-video overflow-hidden rounded-xl border-4 border-sage animate-slideIn">
               <img
                 src={selectedImage.src}
                 alt={selectedImage.alt}
@@ -228,7 +228,7 @@ const PortfolioPage: React.FC = () => {
               />
             </div>
 
-            <div className="flex justify-between items-center mt-4 px-6">
+            <div className="flex justify-between items-center mt-4 px-4">
               <button
                 onClick={handlePrev}
                 disabled={currentIndex === 0}
@@ -269,10 +269,19 @@ const PortfolioPage: React.FC = () => {
 
             <div className="flex justify-center mt-4">
               <button
-                className={clsx("transition-all", likedImages.has(selectedImage.id) ? "text-rose-500 scale-125" : "text-gray-400 hover:text-rose-400")}
+                className={clsx(
+                  "transition-all duration-300",
+                  likedImages.has(selectedImage.id)
+                    ? "text-rose-500 scale-125"
+                    : "text-gray-400 hover:text-rose-400"
+                )}
                 onClick={() => toggleLike(selectedImage.id)}
               >
-                <Heart size={28} fill={likedImages.has(selectedImage.id) ? 'currentColor' : 'none'} />
+                <Heart
+                  size={32}
+                  className={clsx("transition-all duration-300", likedImages.has(selectedImage.id) && "fill-current")}
+                  fill={likedImages.has(selectedImage.id) ? 'currentColor' : 'none'}
+                />
               </button>
             </div>
           </div>
