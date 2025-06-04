@@ -8,7 +8,7 @@ interface PortfolioImage {
   id: number;
   src: string;
   alt: string;
-  category: 'athletics' | 'portraits';
+  category: Category;
 }
 
 const PortfolioPage: React.FC = () => {
@@ -18,6 +18,7 @@ const PortfolioPage: React.FC = () => {
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set());
   const [imageKey, setImageKey] = useState(0);
 
+  // Load images
   useEffect(() => {
     const athleticsImages = Object.keys(import.meta.glob('/public/portfolio/athletics/*.{jpg,jpeg,png,gif}', { eager: true }));
     const portraitImages = Object.keys(import.meta.glob('/public/portfolio/portraits/*.{jpg,jpeg,png,gif}', { eager: true }));
@@ -27,31 +28,31 @@ const PortfolioPage: React.FC = () => {
         id: index + 1,
         src: path.replace('/public', ''),
         alt: `Athletics Photo ${index + 1}`,
-        category: 'athletics' as const,
+        category: 'athletics',
       })),
       ...portraitImages.map((path, index) => ({
         id: athleticsImages.length + index + 1,
         src: path.replace('/public', ''),
         alt: `Portrait Photo ${index + 1}`,
-        category: 'portraits' as const,
+        category: 'portraits',
       })),
     ];
 
     setPortfolioImages(allImages);
   }, []);
 
+  // Load liked state from localStorage
   useEffect(() => {
-    const storedLikes = localStorage.getItem('likedImages');
-    if (storedLikes) {
+    const saved = localStorage.getItem('likedImages');
+    if (saved) {
       try {
-        const parsed = JSON.parse(storedLikes);
-        if (Array.isArray(parsed)) {
-          setLikedImages(new Set(parsed));
-        }
+        const parsed = JSON.parse(saved);
+        setLikedImages(new Set(parsed));
       } catch {}
     }
   }, []);
 
+  // Save likes to localStorage
   useEffect(() => {
     localStorage.setItem('likedImages', JSON.stringify(Array.from(likedImages)));
   }, [likedImages]);
@@ -97,8 +98,6 @@ const PortfolioPage: React.FC = () => {
   useEffect(() => {
     if (selectedImage) {
       window.addEventListener('keydown', handleKeyDown);
-    } else {
-      window.removeEventListener('keydown', handleKeyDown);
     }
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedImage, handleKeyDown]);
@@ -111,11 +110,107 @@ const PortfolioPage: React.FC = () => {
   }, [selectedImage]);
 
   return (
-    <div className={clsx("min-h-screen", activeCategory ? "bg-cream" : "bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden pt-20")}>
-      {/* ... rest of your unmodified section code ... */}
+    <div className={clsx("min-h-screen pt-20", activeCategory ? "bg-cream" : "bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden")}>
+      {!activeCategory && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-float-random opacity-30"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${3 + Math.random() * 4}s`,
+              }}
+            >
+              <Leaf size={12 + Math.random() * 16} className="text-forest/40" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!activeCategory ? (
+        <div className="relative z-10 flex flex-col items-center text-center px-4 pt-36 md:pt-48 pb-24">
+          <h1 className="text-7xl md:text-8xl font-caveat font-bold text-forest mb-6 animate-fadeInUp">Explore My Work</h1>
+          <p className="text-xl md:text-2xl text-charcoal/80 mb-12 font-inter animate-fadeInUp animation-delay-300">
+            Discover the stories captured through my lens
+          </p>
+          <div className="flex flex-col md:flex-row gap-10">
+            {[
+              { cat: 'athletics', icon: <Zap size={44} />, text: 'Dynamic sports coverage →', bg: '/portfolio/athletics-btn-bg.jpg' },
+              { cat: 'portraits', icon: <Users size={44} />, text: 'Timeless personal stories →', bg: '/portfolio/portraits-btn-bg.jpg' },
+            ].map(({ cat, icon, text, bg }) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat as Category)}
+                className="group w-80 h-96 rounded-3xl overflow-hidden shadow-pop hover:shadow-3xl hover:scale-105 transition-all animate-fadeInUp animation-delay-500 relative"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-sage/70 to-gold/60 opacity-90 group-hover:opacity-80 transition" />
+                <div className={`absolute inset-0 bg-[url('${bg}')] bg-cover bg-center group-hover:scale-110 transition-transform duration-700`} />
+                <div className="relative z-10 flex flex-col items-center justify-center h-full text-white p-6">
+                  <div className="p-5 bg-white/20 backdrop-blur-sm rounded-full mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all border border-white/30">{icon}</div>
+                  <h2 className="text-4xl font-caveat font-bold mb-2 capitalize">{cat}</h2>
+                  <p className="font-inter">{text}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="px-6 lg:px-16 py-8 md:py-12">
+          <button
+            onClick={() => setActiveCategory(null)}
+            className="mb-20 mt-36 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
+          >
+            <ArrowLeft size={20} />
+            <Leaf size={16} className="text-sage" />
+            Back to Portfolio
+          </button>
+
+          <div className="text-center mb-16">
+            <h1 className="text-6xl font-caveat font-bold text-forest animate-fadeInUp">
+              {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Portfolio
+            </h1>
+            <p className="text-lg text-charcoal/80 font-inter max-w-2xl mx-auto mt-4 animate-fadeInUp animation-delay-200">
+              {activeCategory === 'athletics'
+                ? 'Capturing the intensity, passion, and triumph of athletic moments'
+                : 'Revealing the authentic beauty and unique stories of individuals'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            {filteredImages.map((image, index) => (
+              <div
+                key={image.id}
+                className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 cursor-pointer animate-fadeInUp"
+                style={{ animationDelay: `${index * 50}ms` }}
+                onClick={() => {
+                  setSelectedImage(image);
+                  setImageKey(prev => prev + 1);
+                }}
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                  <div className="flex items-center gap-2">
+                    <Camera size={18} />
+                    <span className="text-sm font-inter">View Full Size</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {selectedImage && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center px-2 md:px-6 py-6 animate-fadeIn">
+        <div className="fixed inset-0 z-50 bg-gradient-to-br from-black/90 via-charcoal/90 to-black/90 backdrop-blur-sm flex items-center justify-center px-2 md:px-6 py-6 animate-fadeIn">
           <button
             className="absolute top-6 right-6 text-white text-3xl hover:text-rose-400 transition"
             onClick={() => setSelectedImage(null)}
@@ -123,107 +218,60 @@ const PortfolioPage: React.FC = () => {
             ✕
           </button>
 
-          <div className="relative w-full max-w-5xl bg-white/10 border border-white/30 backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-8 transform scale-[1.5] md:scale-125 transition-transform duration-500 animate-fadeIn">
-            <div key={imageKey} className="relative aspect-video overflow-hidden rounded-2xl border-4 border-sage shadow-inner shadow-black/20">
-              <img
-                src={selectedImage.src}
-                alt={selectedImage.alt}
-                className="object-contain w-full h-full transition-transform duration-700"
-              />
+          <div className="relative w-full max-w-5xl bg-gradient-to-br from-cream via-white to-sage/40 rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.2)] p-6 md:p-10 scale-[1.4] md:scale-[1.2] transition-transform duration-500">
+            <div key={imageKey} className="relative aspect-video overflow-hidden rounded-2xl border-4 border-sage animate-slideIn">
+              <img src={selectedImage.src} alt={selectedImage.alt} className="object-contain w-full h-full" />
             </div>
 
-            <div className="flex justify-between items-center mt-6 px-2">
-              <button
-                onClick={handlePrev}
-                disabled={currentIndex === 0}
-                className="text-sage disabled:opacity-30 hover:scale-125 transition-transform hover:animate-bounce"
-              >
+            <div className="flex justify-between items-center mt-4 px-4">
+              <button onClick={handlePrev} disabled={currentIndex === 0} className="text-sage disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse">
                 <ArrowLeft size={28} />
               </button>
-              <button
-                onClick={handleNext}
-                disabled={currentIndex === filteredImages.length - 1}
-                className="text-sage disabled:opacity-30 hover:scale-125 transition-transform hover:animate-bounce"
-              >
+              <button onClick={handleNext} disabled={currentIndex === filteredImages.length - 1} className="text-sage disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse">
                 <ArrowRight size={28} />
               </button>
             </div>
 
             <div className="flex justify-center gap-4 mt-4 overflow-x-auto px-4">
-              {filteredImages
-                .slice(Math.max(0, currentIndex - 1), currentIndex + 2)
-                .map((img) => (
-                  <img
-                    key={img.id}
-                    src={img.src}
-                    alt={img.alt}
-                    onClick={() => {
-                      setSelectedImage(img);
-                      setImageKey(prev => prev + 1);
-                    }}
-                    className={clsx(
-                      "w-20 h-20 object-cover rounded-md cursor-pointer transition-all border animate-fadeIn animate-slideIn",
-                      img.id === selectedImage.id
-                        ? "border-sage scale-110"
-                        : "opacity-50 hover:opacity-100"
-                    )}
-                  />
-                ))}
+              {filteredImages.slice(Math.max(0, currentIndex - 1), currentIndex + 2).map((img) => (
+                <img
+                  key={img.id}
+                  src={img.src}
+                  alt={img.alt}
+                  onClick={() => {
+                    setSelectedImage(img);
+                    setImageKey(prev => prev + 1);
+                  }}
+                  className={clsx(
+                    "w-20 h-20 object-cover rounded-md cursor-pointer transition-all",
+                    img.id === selectedImage.id ? "border-2 border-sage scale-110" : "opacity-50 hover:opacity-100"
+                  )}
+                />
+              ))}
             </div>
 
-            <div className="flex justify-center mt-6 relative">
+            <div className="flex justify-center mt-6">
               <button
                 className={clsx(
-                  "transition-all duration-700 relative group",
+                  "transition-all duration-500 relative",
                   likedImages.has(selectedImage.id)
-                    ? "text-yellow-400 scale-125"
+                    ? "text-yellow-400 scale-125 animate-wiggle"
                     : "text-gray-400 hover:text-yellow-300"
                 )}
                 onClick={() => toggleLike(selectedImage.id)}
               >
                 <Star
-                  size={36}
-                  className={clsx(
-                    "transition-transform duration-700 group-hover:animate-pulseSpin",
-                    likedImages.has(selectedImage.id) && "animate-burstSpin fill-current"
-                  )}
+                  size={32}
+                  className="transition-transform duration-500"
                   fill={likedImages.has(selectedImage.id) ? 'currentColor' : 'none'}
                 />
                 <span className="absolute -right-8 top-1 text-sm text-forest font-semibold">
                   {likedImages.has(selectedImage.id) ? '1' : '0'}
                 </span>
               </button>
-              <style>{`
-                @keyframes burstSpin {
-                  0% { transform: rotate(0deg) scale(1); }
-                  50% { transform: rotate(20deg) scale(1.3); }
-                  100% { transform: rotate(0deg) scale(1); }
-                }
-                .animate-burstSpin {
-                  animation: burstSpin 0.6s ease;
-                }
-                @keyframes pulseSpin {
-                  0%, 100% { transform: rotate(0deg) scale(1); }
-                  50% { transform: rotate(10deg) scale(1.2); }
-                }
-                .animate-pulseSpin {
-                  animation: pulseSpin 0.8s ease-in-out infinite;
-                }
-              `}</style>
             </div>
           </div>
         </div>
-      )}
-
-      {activeCategory && (
-        <button
-          onClick={() => setActiveCategory(null)}
-          className="mt-64 mb-12 flex items-center gap-3 bg-white/80 backdrop-blur-sm text-forest px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 font-inter border border-sage/30"
-        >
-          <ArrowLeft size={20} />
-          <Leaf size={16} className="text-sage" />
-          Back to Portfolio
-        </button>
       )}
     </div>
   );
