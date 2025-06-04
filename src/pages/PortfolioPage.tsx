@@ -65,19 +65,19 @@ const PortfolioPage: React.FC = () => {
   const handlePrev = () => {
     if (selectedImage && currentIndex > 0) {
       setSelectedImage(filteredImages[currentIndex - 1]);
-      setImageKey(prev => prev + 1);
+      setImageKey((prev) => prev + 1);
     }
   };
 
   const handleNext = () => {
     if (selectedImage && currentIndex < filteredImages.length - 1) {
       setSelectedImage(filteredImages[currentIndex + 1]);
-      setImageKey(prev => prev + 1);
+      setImageKey((prev) => prev + 1);
     }
   };
 
   const toggleLike = (id: number) => {
-    setLikedImages(prev => {
+    setLikedImages((prev) => {
       const updated = new Set(prev);
       if (updated.has(id)) updated.delete(id);
       else updated.add(id);
@@ -85,12 +85,15 @@ const PortfolioPage: React.FC = () => {
     });
   };
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (!selectedImage) return;
-    if (e.key === 'ArrowLeft') handlePrev();
-    if (e.key === 'ArrowRight') handleNext();
-    if (e.key === 'Escape') setSelectedImage(null);
-  }, [selectedImage, currentIndex]);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!selectedImage) return;
+      if (e.key === 'ArrowLeft') handlePrev();
+      if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'Escape') setSelectedImage(null);
+    },
+    [selectedImage, currentIndex]
+  );
 
   useEffect(() => {
     if (selectedImage) {
@@ -167,7 +170,7 @@ const PortfolioPage: React.FC = () => {
 
           <div className="text-center mb-16">
             <h1 className="text-6xl font-caveat font-bold text-forest animate-fadeInUp">
-              {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} Portfolio
+              {activeCategory?.charAt(0).toUpperCase() + activeCategory?.slice(1)} Portfolio
             </h1>
             <p className="text-lg text-charcoal/80 font-inter max-w-2xl mx-auto mt-4 animate-fadeInUp animation-delay-200">
               {activeCategory === 'athletics'
@@ -184,7 +187,7 @@ const PortfolioPage: React.FC = () => {
                 style={{ animationDelay: `${index * 50}ms` }}
                 onClick={() => {
                   setSelectedImage(image);
-                  setImageKey(prev => prev + 1);
+                  setImageKey((prev) => prev + 1);
                 }}
               >
                 <img
@@ -215,7 +218,7 @@ const PortfolioPage: React.FC = () => {
             ✕
           </button>
 
-          <div className="relative w-full max-w-5xl bg-gradient-to-br from-cream via-white to-sage/40 rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.2)] p-6 md:p-10 scale-[1.4] md:scale-[1.2] transition-transform duration-500">
+          <div className="relative w-full max-w-5xl bg-gradient-to-br from-cream via-white to-sage/40 rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.2)] p-4 sm:p-6 md:p-10 scale-[1] sm:scale-[1.2] transition-transform duration-500">
             <div key={imageKey} className="relative aspect-video overflow-hidden rounded-2xl border-4 border-sage animate-slideIn">
               <img src={selectedImage.src} alt={selectedImage.alt} className="object-contain w-full h-full" />
             </div>
@@ -237,7 +240,7 @@ const PortfolioPage: React.FC = () => {
                   alt={img.alt}
                   onClick={() => {
                     setSelectedImage(img);
-                    setImageKey(prev => prev + 1);
+                    setImageKey((prev) => prev + 1);
                   }}
                   className={clsx(
                     "w-20 h-20 object-cover rounded-lg cursor-pointer transition-all duration-300",
