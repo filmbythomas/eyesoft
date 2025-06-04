@@ -18,7 +18,6 @@ const PortfolioPage: React.FC = () => {
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set());
   const [imageKey, setImageKey] = useState(0);
 
-  // Load images
   useEffect(() => {
     const athleticsImages = Object.keys(import.meta.glob('/public/portfolio/athletics/*.{jpg,jpeg,png,gif}', { eager: true }));
     const portraitImages = Object.keys(import.meta.glob('/public/portfolio/portraits/*.{jpg,jpeg,png,gif}', { eager: true }));
@@ -41,7 +40,6 @@ const PortfolioPage: React.FC = () => {
     setPortfolioImages(allImages);
   }, []);
 
-  // Load liked state from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('likedImages');
     if (saved) {
@@ -52,7 +50,6 @@ const PortfolioPage: React.FC = () => {
     }
   }, []);
 
-  // Save likes to localStorage
   useEffect(() => {
     localStorage.setItem('likedImages', JSON.stringify(Array.from(likedImages)));
   }, [likedImages]);
@@ -224,10 +221,10 @@ const PortfolioPage: React.FC = () => {
             </div>
 
             <div className="flex justify-between items-center mt-4 px-4">
-              <button onClick={handlePrev} disabled={currentIndex === 0} className="text-sage disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse">
+              <button onClick={handlePrev} disabled={currentIndex === 0} className="text-forest disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse">
                 <ArrowLeft size={28} />
               </button>
-              <button onClick={handleNext} disabled={currentIndex === filteredImages.length - 1} className="text-sage disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse">
+              <button onClick={handleNext} disabled={currentIndex === filteredImages.length - 1} className="text-forest disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse">
                 <ArrowRight size={28} />
               </button>
             </div>
@@ -243,8 +240,10 @@ const PortfolioPage: React.FC = () => {
                     setImageKey(prev => prev + 1);
                   }}
                   className={clsx(
-                    "w-20 h-20 object-cover rounded-md cursor-pointer transition-all",
-                    img.id === selectedImage.id ? "border-2 border-sage scale-110" : "opacity-50 hover:opacity-100"
+                    "w-20 h-20 object-cover rounded-lg cursor-pointer transition-all duration-300",
+                    img.id === selectedImage.id
+                      ? "border-4 border-green-500 shadow-[0_0_10px_rgba(0,128,0,0.4)] scale-110"
+                      : "opacity-50 hover:opacity-90"
                   )}
                 />
               ))}
