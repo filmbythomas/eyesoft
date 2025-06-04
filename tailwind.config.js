@@ -64,6 +64,9 @@ export default {
         'modalSlideUp': 'modalSlideUp 0.4s ease-out',
         'fadeInGridItem': 'fadeInGridItem 0.6s ease-out forwards',
         'fadeInModal': 'fadeInModal 0.5s ease-in-out forwards',
+        'slideIn': 'slideIn 0.5s ease-out forwards',
+        'bounce': 'bounceLight 0.5s ease-in-out',
+        'burst': 'burst 0.4s ease-out',
       },
       keyframes: {
         'gentle-float': {
@@ -115,6 +118,19 @@ export default {
         fadeInModal: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        slideIn: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        bounceLight: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        burst: {
+          '0%': { transform: 'scale(1)', opacity: '1', rotate: '0deg' },
+          '50%': { transform: 'scale(1.3)', opacity: '0.8', rotate: '15deg' },
+          '100%': { transform: 'scale(1)', opacity: '1', rotate: '0deg' },
         },
       },
       transitionTimingFunction: {

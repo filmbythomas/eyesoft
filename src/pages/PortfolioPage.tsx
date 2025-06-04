@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Camera, Zap, Users, ArrowLeft, Leaf, ArrowRight, Heart } from 'lucide-react';
+import { Camera, Zap, Users, ArrowLeft, Leaf, ArrowRight, Star } from 'lucide-react';
 import clsx from 'clsx';
 
 type Category = 'athletics' | 'portraits' | null;
@@ -211,7 +211,7 @@ const PortfolioPage: React.FC = () => {
       )}
 
       {selectedImage && (
-        <div className="fixed inset-0 z-50 bg-gradient-to-br from-black/90 via-charcoal/90 to-black/90 flex items-center justify-center px-2 md:px-6 py-6 animate-fadeIn">
+        <div className="fixed inset-0 z-50 bg-gradient-to-br from-black/90 via-charcoal/90 to-black/90 backdrop-blur-sm flex items-center justify-center px-2 md:px-6 py-6 animate-fadeIn">
           <button
             className="absolute top-6 right-6 text-white text-3xl hover:text-rose-400 transition"
             onClick={() => setSelectedImage(null)}
@@ -232,7 +232,7 @@ const PortfolioPage: React.FC = () => {
               <button
                 onClick={handlePrev}
                 disabled={currentIndex === 0}
-                className="text-sage disabled:opacity-30 hover:scale-125 transition-transform"
+                className="text-sage disabled:opacity-30 hover:scale-125 transition-transform hover:animate-bounce"
               >
                 <ArrowLeft size={28} />
               </button>
@@ -240,7 +240,7 @@ const PortfolioPage: React.FC = () => {
               <button
                 onClick={handleNext}
                 disabled={currentIndex === filteredImages.length - 1}
-                className="text-sage disabled:opacity-30 hover:scale-125 transition-transform"
+                className="text-sage disabled:opacity-30 hover:scale-125 transition-transform hover:animate-bounce"
               >
                 <ArrowRight size={28} />
               </button>
@@ -262,7 +262,7 @@ const PortfolioPage: React.FC = () => {
                       img.id === selectedImage.id
                         ? 'border-sage scale-110'
                         : 'opacity-50 hover:opacity-100'
-                    }`}
+                    } animate-fadeIn animate-slideIn`}
                   />
                 ))}
             </div>
@@ -270,18 +270,24 @@ const PortfolioPage: React.FC = () => {
             <div className="flex justify-center mt-4">
               <button
                 className={clsx(
-                  "transition-all duration-300",
+                  "transition-all duration-500 relative",
                   likedImages.has(selectedImage.id)
-                    ? "text-rose-500 scale-125"
-                    : "text-gray-400 hover:text-rose-400"
+                    ? "text-yellow-400 scale-125"
+                    : "text-gray-400 hover:text-yellow-300"
                 )}
                 onClick={() => toggleLike(selectedImage.id)}
               >
-                <Heart
+                <Star
                   size={32}
-                  className={clsx("transition-all duration-300", likedImages.has(selectedImage.id) && "fill-current")}
+                  className={clsx(
+                    "transition-transform duration-500",
+                    likedImages.has(selectedImage.id) && "rotate-[20deg] scale-125 opacity-100"
+                  )}
                   fill={likedImages.has(selectedImage.id) ? 'currentColor' : 'none'}
                 />
+                <span className="absolute -right-8 top-1 text-sm text-forest font-semibold">
+                  {likedImages.has(selectedImage.id) ? '1' : '0'}
+                </span>
               </button>
             </div>
           </div>
