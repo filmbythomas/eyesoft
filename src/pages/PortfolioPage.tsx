@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Camera, Zap, Users, ArrowLeft, Leaf, ArrowRight, Maximize2, Minimize2 } from 'lucide-react';
 import clsx from 'clsx';
-import { LikeButton } from '../components/LikeButton';
 
 type Category = 'athletics' | 'portraits' | null;
 
@@ -236,10 +235,6 @@ const PortfolioPage: React.FC = () => {
               >
                 {isZoomed ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
               </button>
-            </div>
-
-            <div className="flex justify-center mt-6">
-              <LikeButton imageId={String(selectedImage.id)} />
             </div>
 
             <div className="flex justify-center gap-4 mt-4 flex-wrap px-4">
