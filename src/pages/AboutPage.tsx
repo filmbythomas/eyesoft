@@ -96,7 +96,7 @@ const AboutPage: React.FC = () => {
                     className="w-full h-auto object-cover rounded-lg aspect-[4/3] md:aspect-auto md:max-h-[75vh] lg:max-h-[80vh] shadow-lg transition-opacity duration-1000 ease-in-out" 
                   />
                   <div className="absolute bottom-2.5 right-2.5 bg-surface bg-opacity-85 px-3 py-1.5 rounded-md text-xs font-sans text-text-primary shadow-md font-bold">
-                    T // EyesOfTee
+                    Thomas Garcia // EyesOfT
                   </div>
                 </div>
               </div>
@@ -108,21 +108,15 @@ const AboutPage: React.FC = () => {
             <PlantDivider icon={<Feather />} />
             <div className="space-y-6 text-text-secondary leading-relaxed text-base md:text-lg font-sans font-semibold">
               <p className="first-letter:text-5xl first-letter:font-extrabold first-letter:text-primary first-letter:mr-2.5 first-letter:float-left">
-                Hello! I'm T, the heart and soul behind Eyes Of T...
+                Hello! I'm Thomas, the heart and soul behind Eyes Of T. I started showing my photography work in 2023, taking pictures for my schools basketball team. I didn't know anything, no editing, no framing, just taking pictures for the fun of it. Now, 2 years later I have improved exponentially! I am always putting out unique and creative works through athletic work and portraits.
               </p>
               <blockquote className="border-l-4 border-secondary pl-5 italic text-text-primary my-8 py-2 bg-primary/5 rounded-r-md shadow-sm">
-                "Photography is the art of frozen time..."
+                “Photography is the story I fail to put into words.” – Destin Sparks
               </blockquote>
-              <p>
-                For me, a photograph is more than just an image...
-              </p>
               <PlantDivider icon={<Palette />} />
               <h3 className="text-secondary font-extrabold text-xl md:text-2xl mt-8 mb-3">Philosophy & Approach</h3>
               <p>
-                My approach is rooted in authenticity...
-              </p>
-              <p>
-                It's about telling <strong className="text-primary-dark font-extrabold">your story</strong>, authentically and beautifully...
+                It's about telling <strong className="text-primary-dark font-extrabold">your story</strong>, Photography is about more than just capturing a moment. It’s about seeing things differently. Whether I’m shooting fast-paced sports or quiet portrait sessions, I’m always looking for angles and stories that others might miss. I believe the best photos come from pushing boundaries; trying new techniques, experimenting with light, and constantly challenging myself to see beyond the obvious. Being a high school photographer doesn’t limit me; it motivates me to create work that stands out, feels real, and speaks for itself. Every shot is a chance to show something new, honest, and powerful.
               </p>
             </div>
           </div>
