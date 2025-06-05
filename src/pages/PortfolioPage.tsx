@@ -11,7 +11,6 @@ interface PortfolioImage {
   category: Category;
 }
 
-// Mock server sync function
 const syncLikeCount = async (id: number, liked: boolean) => {
   console.log(`Syncing image ${id} to server. Liked: ${liked}`);
   return new Promise(resolve => setTimeout(resolve, 500));
@@ -24,7 +23,7 @@ const PortfolioPage: React.FC = () => {
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set());
   const [imageKey, setImageKey] = useState(0);
   const [likeCountMap, setLikeCountMap] = useState<Record<number, number>>({});
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
   const autoplayRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -48,7 +47,6 @@ const PortfolioPage: React.FC = () => {
 
     setPortfolioImages(allImages);
   }, []);
-
   useEffect(() => {
     const saved = localStorage.getItem('likedImages');
     const counts = localStorage.getItem('likeCountMap');
@@ -115,7 +113,10 @@ const PortfolioPage: React.FC = () => {
     if (!selectedImage) return;
     if (e.key === 'ArrowLeft') handlePrev();
     if (e.key === 'ArrowRight') handleNext();
-    if (e.key === 'Escape') setSelectedImage(null);
+    if (e.key === 'Escape') {
+      setSelectedImage(null);
+      setIsZoomed(false);
+    }
   }, [selectedImage, currentIndex]);
 
   useEffect(() => {
@@ -132,25 +133,8 @@ const PortfolioPage: React.FC = () => {
     };
   }, [selectedImage]);
 
-  const toggleFullscreen = () => {
-    const elem = document.documentElement;
-    if (!document.fullscreenElement) {
-      elem.requestFullscreen().then(() => setIsFullscreen(true));
-    } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false));
-    }
-  };
-
   useEffect(() => {
-    const handleFsChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFsChange);
-    return () => document.removeEventListener('fullscreenchange', handleFsChange);
-  }, []);
-
-  useEffect(() => {
-    if (selectedImage && !isFullscreen) {
+    if (selectedImage) {
       autoplayRef.current = setInterval(() => {
         if (currentIndex < filteredImages.length - 1) handleNext();
       }, 15000);
@@ -158,7 +142,7 @@ const PortfolioPage: React.FC = () => {
     return () => {
       if (autoplayRef.current) clearInterval(autoplayRef.current);
     };
-  }, [selectedImage, isFullscreen, currentIndex]);
+  }, [selectedImage, currentIndex]);
 
   return (
     <div className={clsx("min-h-screen pt-20", activeCategory ? "bg-cream" : "bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden")}>
@@ -209,7 +193,6 @@ const PortfolioPage: React.FC = () => {
           </div>
         </>
       )}
-
       {activeCategory && (
         <div className="px-6 lg:px-16 py-8 md:py-12">
           <button
@@ -265,28 +248,46 @@ const PortfolioPage: React.FC = () => {
       {selectedImage && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
           <button
-            className="absolute top-4 right-4 text-white text-3xl hover:text-rose-400 transition"
-            onClick={() => setSelectedImage(null)}
+            className="absolute top-4 right-4 text-white text-3xl hover:text-red-400 transition"
+            onClick={() => {
+              setSelectedImage(null);
+              setIsZoomed(false);
+            }}
           >
             ✕
           </button>
 
-          <div className="relative w-full max-w-4xl bg-gradient-to-br from-cream via-white to-sage/40 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.3)] p-4 md:p-8 transition-all">
-            <div key={imageKey} className="relative aspect-video overflow-hidden rounded-xl border-4 border-sage shadow-inner">
-              <img src={selectedImage.src} alt={selectedImage.alt} className="object-contain w-full h-full" />
+          <div className={clsx("relative w-full transition-all duration-300", isZoomed ? "max-w-6xl" : "max-w-4xl")}>
+            <div className={clsx(
+              "relative overflow-hidden rounded-xl border-4 shadow-inner transition-all duration-300",
+              isZoomed ? "aspect-[3/2]" : "aspect-video border-sage"
+            )}>
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.alt}
+                className="object-contain w-full h-full"
+              />
               <button
-                onClick={toggleFullscreen}
-                className="absolute bottom-3 right-3 bg-white/80 text-forest p-2 rounded-lg shadow-md hover:bg-white transition-all"
+                onClick={() => setIsZoomed(z => !z)}
+                className="absolute bottom-3 right-3 bg-white/90 text-forest p-2 rounded-lg shadow-md hover:bg-white transition-all"
               >
-                {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+                {isZoomed ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
               </button>
             </div>
 
             <div className="flex justify-between items-center mt-6 px-4">
-              <button onClick={handlePrev} disabled={currentIndex === 0} className="text-forest disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse">
+              <button
+                onClick={handlePrev}
+                disabled={currentIndex === 0}
+                className="text-forest disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse"
+              >
                 <ArrowLeft size={28} />
               </button>
-              <button onClick={handleNext} disabled={currentIndex === filteredImages.length - 1} className="text-forest disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse">
+              <button
+                onClick={handleNext}
+                disabled={currentIndex === filteredImages.length - 1}
+                className="text-forest disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse"
+              >
                 <ArrowRight size={28} />
               </button>
             </div>
@@ -326,7 +327,7 @@ const PortfolioPage: React.FC = () => {
                   className="transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12"
                   fill={likedImages.has(selectedImage.id) ? 'currentColor' : 'none'}
                 />
-                <span className="mt-2 text-sm font-semibold text-forest drop-shadow-sm">
+                <span className="mt-2 text-sm font-bold text-forest drop-shadow-[0_2px_2px_rgba(0,0,0,0.2)] group-hover:scale-110 transition-all duration-300">
                   {likeCountMap[selectedImage.id] || 0} {likeCountMap[selectedImage.id] === 1 ? 'Like' : 'Likes'}
                 </span>
               </button>
