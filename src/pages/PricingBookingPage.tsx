@@ -289,7 +289,7 @@ const portraitsTiers: Tier[] = [
       "60+ edited photos",
       "Up to 3 locations",
       "3 Outfit changes included"
-      "5, 8x10 photos",
+      "5 8x10 photos",
       "Location Consultation",
       "All image files",
     ],
