@@ -167,6 +167,53 @@ const PortfolioPage: React.FC = () => {
     <div className={clsx("min-h-screen pt-20", activeCategory ? "bg-cream" : "bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden")}>
       {/* Existing UI code stays unchanged */}
       {/* Insert the updated modal viewer below */}
+{!activeCategory && (
+  <>
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {[...Array(20)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute animate-float-random opacity-30"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${3 + Math.random() * 4}s`,
+          }}
+        >
+          <Leaf size={12 + Math.random() * 16} className="text-forest/40" />
+        </div>
+      ))}
+    </div>
+
+    <div className="relative z-30 flex flex-col items-center text-center px-4 pt-36 md:pt-48 pb-24">
+      <h1 className="text-7xl md:text-8xl font-caveat font-bold text-forest mb-6 animate-fadeInUp">Explore My Work</h1>
+      <p className="text-xl md:text-2xl text-charcoal/80 mb-12 font-inter animate-fadeInUp animation-delay-300">
+        Discover the stories captured through my lens
+      </p>
+      <div className="flex flex-col md:flex-row gap-10">
+        {[
+          { cat: 'athletics', icon: <Zap size={44} />, text: 'Dynamic sports coverage →', bg: '/portfolio/athletics-btn-bg.jpg' },
+          { cat: 'portraits', icon: <Users size={44} />, text: 'Timeless personal stories →', bg: '/portfolio/portraits-btn-bg.jpg' },
+        ].map(({ cat, icon, text, bg }) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat as Category)}
+            className="group w-80 h-96 rounded-3xl overflow-hidden shadow-pop hover:shadow-3xl hover:scale-105 transition-all animate-fadeInUp animation-delay-500 relative"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-sage/70 to-gold/60 opacity-90 group-hover:opacity-80 transition" />
+            <div className={`absolute inset-0 bg-[url('${bg}')] bg-cover bg-center group-hover:scale-110 transition-transform duration-700`} />
+            <div className="relative z-10 flex flex-col items-center justify-center h-full text-white p-6">
+              <div className="p-5 bg-white/20 backdrop-blur-sm rounded-full mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all border border-white/30">{icon}</div>
+              <h2 className="text-4xl font-caveat font-bold mb-2 capitalize">{cat}</h2>
+              <p className="font-inter">{text}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  </>
+)}
 
       {selectedImage && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
