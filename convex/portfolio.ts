@@ -8,7 +8,6 @@ const generateImagePaths = (category: "athletics" | "portraits", count: number) 
     src: `/portfolio/${category}/sample-${i + 1}.jpg`,
     alt: `${category.charAt(0).toUpperCase() + category.slice(1)} Sample ${i + 1}`,
     category: category,
-    likes: 0,
     // Add an order field based on the number in the filename for reliable sorting
     order: i + 1, 
   }));
@@ -35,8 +34,7 @@ export const seedPortfolioImages = internalMutation({
           src: imgData.src,
           alt: imgData.alt,
           category: imgData.category,
-          likes: imgData.likes,
-          order: imgData.order, // Make sure to insert the order field
+          order: imgData.order, // ✅ only valid properties
         });
         seededCount++;
       } else {
@@ -51,31 +49,26 @@ export const seedPortfolioImages = internalMutation({
   },
 });
 
-
 export const listImagesByCategory = query({
   args: { category: v.union(v.literal("athletics"), v.literal("portraits")) },
   handler: async (ctx, args) => {
     const images = await ctx.db
       .query("portfolioImages")
       .withIndex("by_category", (q) => q.eq("category", args.category))
-      // .order("asc") // Convex sorts by index fields first, then by _creationTime.
-      // To sort by filename number, we'll sort on the client or add an 'order' field.
-      // For now, let's add an 'order' field to the schema and sort by it.
       .collect();
-    
+
     // Sort by the 'order' field after fetching
     return images.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   },
 });
 
+// ❌ Removed likeImage mutation because `likes` field no longer exists
+// If you need a placeholder to keep the function name:
 export const likeImage = mutation({
   args: { imageId: v.id("portfolioImages") },
-  handler: async (ctx, args) => {
-    const image = await ctx.db.get(args.imageId);
-    if (image) {
-      await ctx.db.patch(args.imageId, { likes: image.likes + 1 });
-      return true;
-    }
+  handler: async () => {
+    // Likes have been removed from the schema.
+    // This is now a no-op.
     return false;
   },
 });
