@@ -17,7 +17,6 @@ import type * as auth from "../auth.js";
 import type * as bookings from "../bookings.js";
 import type * as emailActions from "../emailActions.js";
 import type * as http from "../http.js";
-import type * as likeImage from "../likeImage.js";
 import type * as portfolio from "../portfolio.js";
 import type * as router from "../router.js";
 
@@ -34,7 +33,6 @@ declare const fullApi: ApiFromModules<{
   bookings: typeof bookings;
   emailActions: typeof emailActions;
   http: typeof http;
-  likeImage: typeof likeImage;
   portfolio: typeof portfolio;
   router: typeof router;
 }>;
