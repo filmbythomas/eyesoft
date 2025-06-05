@@ -192,7 +192,7 @@ const PortfolioPage: React.FC = () => {
             </div>
           </div>
         </>
-      )}
+            )}
       {activeCategory && (
         <div className="px-6 lg:px-16 py-8 md:py-12">
           <button
