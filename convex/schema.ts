@@ -19,10 +19,17 @@ const applicationTables = {
     alt: v.string(),
     category: v.union(v.literal("athletics"), v.literal("portraits")),
     likes: v.number(),
-    order: v.optional(v.number()), // Added order field for reliable sorting
+    order: v.optional(v.number()),
   })
-    .index("by_category", ["category", "order"]) // Index including order
-    .index("by_src", ["src"]), 
+    .index("by_category", ["category", "order"])
+    .index("by_src", ["src"]),
+
+  likes: defineTable({
+    imageId: v.string(),
+    deviceId: v.string(),
+  })
+    .index("by_image", ["imageId"])
+    .index("by_device_image", ["imageId", "deviceId"]),
 };
 
 export default defineSchema({

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Camera, Zap, Users, ArrowLeft, Leaf, ArrowRight, Star, Maximize2, Minimize2 } from 'lucide-react';
+import { Camera, Zap, Users, ArrowLeft, Leaf, ArrowRight, Maximize2, Minimize2 } from 'lucide-react';
 import clsx from 'clsx';
+import { LikeButton } from '../components/LikeButton';
 
 type Category = 'athletics' | 'portraits' | null;
 
@@ -11,18 +12,11 @@ interface PortfolioImage {
   category: Category;
 }
 
-const syncLikeCount = async (id: number, liked: boolean) => {
-  console.log(`Syncing image ${id} to server. Liked: ${liked}`);
-  return new Promise(resolve => setTimeout(resolve, 500));
-};
-
 const PortfolioPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category>(null);
   const [selectedImage, setSelectedImage] = useState<PortfolioImage | null>(null);
   const [portfolioImages, setPortfolioImages] = useState<PortfolioImage[]>([]);
-  const [likedImages, setLikedImages] = useState<Set<number>>(new Set());
   const [imageKey, setImageKey] = useState(0);
-  const [likeCountMap, setLikeCountMap] = useState<Record<number, number>>({});
   const [isZoomed, setIsZoomed] = useState(false);
   const autoplayRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -48,26 +42,6 @@ const PortfolioPage: React.FC = () => {
     setPortfolioImages(allImages);
   }, []);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('likedImages');
-    const counts = localStorage.getItem('likeCountMap');
-    if (saved) {
-      try {
-        setLikedImages(new Set(JSON.parse(saved)));
-      } catch {}
-    }
-    if (counts) {
-      try {
-        setLikeCountMap(JSON.parse(counts));
-      } catch {}
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('likedImages', JSON.stringify(Array.from(likedImages)));
-    localStorage.setItem('likeCountMap', JSON.stringify(likeCountMap));
-  }, [likedImages, likeCountMap]);
-
   const filteredImages = activeCategory
     ? portfolioImages.filter((img) => img.category === activeCategory)
     : [];
@@ -88,26 +62,6 @@ const PortfolioPage: React.FC = () => {
       setSelectedImage(filteredImages[currentIndex + 1]);
       setImageKey(prev => prev + 1);
     }
-  };
-
-  const toggleLike = async (id: number) => {
-    setLikedImages(prev => {
-      const updated = new Set(prev);
-      const newCountMap = { ...likeCountMap };
-      const liked = !updated.has(id);
-
-      if (liked) {
-        updated.add(id);
-        newCountMap[id] = (newCountMap[id] || 0) + 1;
-      } else {
-        updated.delete(id);
-        newCountMap[id] = Math.max((newCountMap[id] || 1) - 1, 0);
-      }
-
-      setLikeCountMap(newCountMap);
-      syncLikeCount(id, liked);
-      return updated;
-    });
   };
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -284,21 +238,8 @@ const PortfolioPage: React.FC = () => {
               </button>
             </div>
 
-            <div className="flex justify-between items-center mt-6 px-4">
-              <button
-                onClick={handlePrev}
-                disabled={currentIndex === 0}
-                className="text-forest disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse"
-              >
-                <ArrowLeft size={28} />
-              </button>
-              <button
-                onClick={handleNext}
-                disabled={currentIndex === filteredImages.length - 1}
-                className="text-forest disabled:opacity-30 hover:scale-125 transition-transform hover:animate-pulse"
-              >
-                <ArrowRight size={28} />
-              </button>
+            <div className="flex justify-center mt-6">
+              <LikeButton imageId={String(selectedImage.id)} />
             </div>
 
             <div className="flex justify-center gap-4 mt-4 flex-wrap px-4">
@@ -319,27 +260,6 @@ const PortfolioPage: React.FC = () => {
                   )}
                 />
               ))}
-            </div>
-
-            <div className="flex justify-center mt-6">
-              <button
-                className={clsx(
-                  "relative flex flex-col items-center group transition-transform duration-300",
-                  likedImages.has(selectedImage.id)
-                    ? "text-yellow-400 scale-110"
-                    : "text-gray-400 hover:text-yellow-300"
-                )}
-                onClick={() => toggleLike(selectedImage.id)}
-              >
-                <Star
-                  size={36}
-                  className="transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12"
-                  fill={likedImages.has(selectedImage.id) ? 'currentColor' : 'none'}
-                />
-                <span className="mt-2 text-sm font-bold text-forest drop-shadow-[0_2px_2px_rgba(0,0,0,0.2)] group-hover:scale-110 transition-all duration-300">
-                  {likeCountMap[selectedImage.id] || 0} {likeCountMap[selectedImage.id] === 1 ? 'Like' : 'Likes'}
-                </span>
-              </button>
             </div>
           </div>
         </div>
