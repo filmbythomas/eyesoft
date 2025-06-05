@@ -152,7 +152,7 @@ const PortfolioPage: React.FC = () => {
     : "bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden"
 )}>
   {!activeCategory && (
-    <div className="h-[340px] w-full" />  {/* This spacer prevents content overlap */}
+    <div className="h-[340px] w-full" /> 
   )}
 
       {!activeCategory && (
