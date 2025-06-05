@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Feather, Palette, Leaf } from 'lucide-react'; // Nature & Photography icons
 
 interface IconProps {
@@ -16,6 +16,8 @@ const PlantDivider: React.FC<{icon?: React.ReactElement<IconProps>}> = ({icon}) 
 
 const AboutPage: React.FC = () => {
   const tiltRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const images = Array.from({ length: 6 }, (_, i) => `/about/aboutme${i + 1}.jpg`);
 
   useEffect(() => {
     const tiltElement = tiltRef.current;
@@ -45,6 +47,13 @@ const AboutPage: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
     <div className="page-container bg-background text-text-primary overflow-x-hidden">
       
@@ -54,15 +63,15 @@ const AboutPage: React.FC = () => {
         </h1>
         
         <div className="grid md:grid-cols-12 gap-10 md:gap-16 items-start mb-12 md:mb-20">
-          <div className="md:col-span-5 lg:col-span-5 animate-fadeInUp animation-delay-300"> {/* Adjusted column span */}
+          <div className="md:col-span-5 lg:col-span-5 animate-fadeInUp animation-delay-300">
             <div className="perspective-container"> 
               <div ref={tiltRef} className="relative group tilt-effect">
                 <div className="absolute -inset-1.5 bg-gradient-to-br from-secondary via-primary to-accent rounded-xl blur-md opacity-50 group-hover:opacity-60 transition-all duration-400"></div>
                 <div className="relative p-1.5 bg-surface rounded-xl shadow-2xl border-2 border-surface">
                   <img 
-                    src="/about/me-landscape.jpg" 
-                    alt="A photo of T, the photographer" 
-                    className="w-full h-auto object-cover rounded-lg aspect-[4/3] md:aspect-auto md:max-h-[75vh] lg:max-h-[80vh] shadow-lg" // Enlarged image
+                    src={images[currentIndex]} 
+                    alt={`About Me ${currentIndex + 1}`} 
+                    className="w-full h-auto object-cover rounded-lg aspect-[4/3] md:aspect-auto md:max-h-[75vh] lg:max-h-[80vh] shadow-lg transition-opacity duration-700 ease-in-out" 
                   />
                   <div className="absolute bottom-2.5 right-2.5 bg-surface bg-opacity-85 px-3 py-1.5 rounded-md text-xs font-sans text-text-primary shadow-md font-bold">
                     T // EyesOfTee
@@ -72,9 +81,9 @@ const AboutPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="md:col-span-7 lg:col-span-7 bg-surface p-6 md:p-10 rounded-2xl shadow-xl animate-fadeInUp animation-delay-400 border-2 border-accent/20"> {/* Adjusted column span */}
+          <div className="md:col-span-7 lg:col-span-7 bg-surface p-6 md:p-10 rounded-2xl shadow-xl animate-fadeInUp animation-delay-400 border-2 border-accent/20">
             <h2 className="text-primary font-extrabold mb-3 text-3xl md:text-4xl">My Journey</h2>
-            <PlantDivider icon={<Feather />} /> {/* Custom Icon */}
+            <PlantDivider icon={<Feather />} />
             <div className="space-y-6 text-text-secondary leading-relaxed text-base md:text-lg font-sans font-semibold">
               <p className="first-letter:text-5xl first-letter:font-extrabold first-letter:text-primary first-letter:mr-2.5 first-letter:float-left">
                 Hello! I'm T, the heart and soul behind Eyes Of T. My adventure into photography wasn't a planned expedition but a serendipitous discovery. It started with a borrowed camera, a dash of curiosity, and an insatiable desire to capture the fleeting narratives woven into the fabric of everyday life. You can often find glimpses of my latest work and behind-the-scenes on my Instagram: <a href="https://www.instagram.com/eyesofteee" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark font-bold underline transition-colors duration-200">@eyesofteee</a>.
@@ -87,7 +96,7 @@ const AboutPage: React.FC = () => {
               <p>
                 For me, a photograph is more than just an image; it's a vessel of emotion, a frozen moment of raw honesty, a timeless echo of beauty. My lens seeks out those unscripted instances – the subtle expressions, the vibrant energy, the quiet poetry that often goes unnoticed.
               </p>
-              <PlantDivider icon={<Palette />} /> {/* Custom Icon */}
+              <PlantDivider icon={<Palette />} />
               <h3 className="text-secondary font-extrabold text-xl md:text-2xl mt-8 mb-3">Philosophy & Approach</h3>
               <p>
                 My approach is rooted in authenticity. I thrive on natural light, unique perspectives, and genuine connections. Whether I'm courtside capturing the intensity of an athletic feat or in a quiet corner immortalizing a personal story, my aim is to create art that not only looks stunning but feels deeply resonant. 

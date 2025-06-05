@@ -11,10 +11,17 @@ const MainPage: React.FC<MainPageProps> = ({ onNavigate }) => {
     onNavigate(page);
   };
 
-  const aboutImageTiltRef = useRef<HTMLImageElement>(null);
+  const aboutImageTiltRef = useRef<HTMLDivElement>(null);
+  const [aboutIndex, setAboutIndex] = useState(0);
+  const [sportsIndex, setSportsIndex] = useState(0);
+  const [portraitIndex, setPortraitIndex] = useState(0);
+
+  const aboutImages = Array.from({ length: 6 }, (_, i) => `/about/aboutme${i + 1}.jpg`);
+  const sportsImages = Array.from({ length: 45 }, (_, i) => `/portfolio/athletics/sports${i + 1}.jpg`);
+  const portraitImages = Array.from({ length: 16 }, (_, i) => `/portfolio/athletics/portrait${i + 1}.jpg`);
 
   useEffect(() => {
-    const tiltElement = aboutImageTiltRef.current;
+    const tiltElement = aboutImageTiltRef.current?.querySelector('img');
     let parentContainer: HTMLElement | null = null;
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -34,12 +41,10 @@ const MainPage: React.FC<MainPageProps> = ({ onNavigate }) => {
       }
     };
 
-    if (tiltElement) {
-      parentContainer = tiltElement.parentElement?.parentElement as HTMLElement;
-      if (parentContainer) {
-        parentContainer.addEventListener('mousemove', handleMouseMove);
-        parentContainer.addEventListener('mouseleave', handleMouseLeave);
-      }
+    if (aboutImageTiltRef.current) {
+      parentContainer = aboutImageTiltRef.current;
+      parentContainer.addEventListener('mousemove', handleMouseMove);
+      parentContainer.addEventListener('mouseleave', handleMouseLeave);
     }
 
     return () => {
@@ -47,6 +52,24 @@ const MainPage: React.FC<MainPageProps> = ({ onNavigate }) => {
         parentContainer.removeEventListener('mousemove', handleMouseMove);
         parentContainer.removeEventListener('mouseleave', handleMouseLeave);
       }
+    };
+  }, []);
+
+  useEffect(() => {
+    const aboutInterval = setInterval(() => {
+      setAboutIndex((prev) => (prev + 1) % aboutImages.length);
+    }, 5000);
+    const sportsInterval = setInterval(() => {
+      setSportsIndex((prev) => (prev + 1) % sportsImages.length);
+    }, 5000);
+    const portraitInterval = setInterval(() => {
+      setPortraitIndex((prev) => (prev + 1) % portraitImages.length);
+    }, 5000);
+
+    return () => {
+      clearInterval(aboutInterval);
+      clearInterval(sportsInterval);
+      clearInterval(portraitInterval);
     };
   }, []);
 
@@ -85,12 +108,11 @@ const MainPage: React.FC<MainPageProps> = ({ onNavigate }) => {
         className="min-h-screen flex items-center justify-center bg-surface text-text-primary p-8 md:p-12 relative overflow-hidden"
       >
         <div className="relative z-10 grid md:grid-cols-2 gap-10 md:gap-16 items-center max-w-6xl mx-auto">
-          <div className="animate-fadeInUp animation-delay-300 perspective-container">
+          <div ref={aboutImageTiltRef} className="animate-fadeInUp animation-delay-300 perspective-container">
             <img 
-              ref={aboutImageTiltRef}
-              src="/home/about-preview-image.jpg" 
-              alt="About Eyes Of T" 
-              className="rounded-xl shadow-2xl object-cover w-full h-auto md:h-[550px] tilt-effect border-4 border-background" 
+              src={aboutImages[aboutIndex]}
+              alt={`About Image ${aboutIndex + 1}`}
+              className="rounded-xl shadow-2xl object-cover w-full h-auto md:h-[550px] tilt-effect border-4 border-background transition-opacity duration-700 ease-in-out" 
             />
           </div>
           <div className="text-center md:text-left animate-fadeInUp animation-delay-400">
@@ -113,16 +135,27 @@ const MainPage: React.FC<MainPageProps> = ({ onNavigate }) => {
         className="min-h-screen flex flex-col items-center justify-center bg-background text-text-primary p-8 md:p-12"
       >
         <h2 className="text-primary font-extrabold mb-16 text-center animate-fadeInUp">Glimpses of My Work</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 mb-16 w-full max-w-7xl mx-auto">
-          {[1, 2, 3, 4].map(i => ( 
-            <div key={i} className={`aspect-w-3 aspect-h-4 bg-surface rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-400 ease-smooth-out group animate-fadeInUp transform hover:-translate-y-2.5 hover:rotate-[-2deg] hover:scale-[1.03]`} style={{animationDelay: `${0.25 + i * 0.1}s`}}>
-              <img 
-                src={`/home/portfolio-preview-${i}.jpg`} 
-                alt={`Portfolio Preview ${i}`} 
-                className="w-full h-full object-cover transition-transform duration-500 ease-smooth-out group-hover:scale-110" 
-              />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl mx-auto mb-16">
+          <div className="bg-surface rounded-2xl shadow-2xl overflow-hidden aspect-[4/5] relative group animate-fadeInUp transition-all duration-400">
+            <img 
+              src={sportsImages[sportsIndex]} 
+              alt={`Sports Preview ${sportsIndex + 1}`}
+              className="object-cover w-full h-full transition-opacity duration-700 ease-in-out" 
+            />
+            <div className="absolute bottom-3 left-3 bg-black/50 text-white text-sm px-3 py-1 rounded-md font-semibold shadow-md">
+              Athletics
             </div>
-          ))}
+          </div>
+          <div className="bg-surface rounded-2xl shadow-2xl overflow-hidden aspect-[4/5] relative group animate-fadeInUp transition-all duration-400">
+            <img 
+              src={portraitImages[portraitIndex]} 
+              alt={`Portrait Preview ${portraitIndex + 1}`}
+              className="object-cover w-full h-full transition-opacity duration-700 ease-in-out" 
+            />
+            <div className="absolute bottom-3 left-3 bg-black/50 text-white text-sm px-3 py-1 rounded-md font-semibold shadow-md">
+              Portraits
+            </div>
+          </div>
         </div>
         <button 
           onClick={() => navigateAndSetHash('portfolio')}
