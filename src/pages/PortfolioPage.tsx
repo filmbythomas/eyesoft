@@ -47,6 +47,7 @@ const PortfolioPage: React.FC = () => {
 
     setPortfolioImages(allImages);
   }, []);
+
   useEffect(() => {
     const saved = localStorage.getItem('likedImages');
     const counts = localStorage.getItem('likeCountMap');
@@ -146,14 +147,12 @@ const PortfolioPage: React.FC = () => {
 
   return (
     <div className={clsx(
-  "min-h-screen",
-  activeCategory
-    ? "pt-20 bg-cream"
-    : "bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden"
-)}>
-  {!activeCategory && (
-    <div className="h-[340px] w-full" /> 
-  )}
+      "min-h-screen",
+      activeCategory
+        ? "pt-20 bg-cream"
+        : "relative overflow-hidden bg-[url('/portfolio/portfoliopagebg.png')] bg-no-repeat bg-cover bg-center md:bg-[length:150%] md:bg-repeat animate-diagonalScroll"
+    )}>
+      {!activeCategory && <div className="h-[340px] w-full" />}
 
       {!activeCategory && (
         <>
@@ -174,9 +173,9 @@ const PortfolioPage: React.FC = () => {
             ))}
           </div>
 
-          <div className="relative z-30 flex flex-col items-center text-center px-4 pt-36 md:pt-48 pb-24">
-            <h1 className="text-7xl md:text-8xl font-caveat font-bold text-forest mb-6 animate-fadeInUp">Explore My Work</h1>
-            <p className="text-xl md:text-2xl text-charcoal/80 mb-12 font-inter animate-fadeInUp animation-delay-300">
+          <div className="relative z-30 flex flex-col items-center text-center px-4 pt-52 md:pt-60 pb-24">
+            <h1 className="text-6xl md:text-8xl font-caveat font-bold text-forest mb-6 animate-fadeInUp">Explore My Work</h1>
+            <p className="text-lg md:text-2xl text-charcoal/80 mb-12 font-inter animate-fadeInUp animation-delay-300">
               Discover the stories captured through my lens
             </p>
             <div className="flex flex-col md:flex-row gap-10">
@@ -201,7 +200,8 @@ const PortfolioPage: React.FC = () => {
             </div>
           </div>
         </>
-            )}
+      )}
+
       {activeCategory && (
         <div className="px-6 lg:px-16 py-8 md:py-12">
           <button
