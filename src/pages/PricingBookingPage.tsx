@@ -196,13 +196,12 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, selectedTi
 const athleticsTiers: Tier[] = [
   {
     id: "starter",
-    name: "Starter",
-    price: "$150",
-    description: "Perfect for capturing key moments",
+    name: "Game Day",
+    price: "$30",
+    description: "Perfect for social media",
     features: [
-      "Up to 2 hours coverage",
-      "30 high-resolution photos",
-      "Online gallery access",
+      "1 Full Game Coverage",
+      "10 edited action and game photos",
       "Quick turnaround"
     ],
     icon: <Camera size={32} className="text-white" />,
@@ -212,15 +211,15 @@ const athleticsTiers: Tier[] = [
   },
   {
     id: "pro",
-    name: "Pro",
-    price: "$250",
-    description: "Comprehensive game coverage",
+    name: "3 Day Coverage",
+    price: "$100",
+    description: "Comprehensive game coverage for coaches or multiple games.",
     features: [
-      "Full game coverage",
-      "75 high-resolution photos",
-      "Team photo session",
+      "3 Full game coverage",
+      "35-40 edited action and game photos",
+      "Team photos (Good for coaches!)",
       "Priority scheduling",
-      "Social media package"
+      "Social media / graphic ready photos"
     ],
     popular: true,
     icon: <Zap size={32} className="text-white" />,
@@ -230,15 +229,17 @@ const athleticsTiers: Tier[] = [
   },
   {
     id: "elite",
-    name: "Elite",
-    price: "$400",
-    description: "Premium season documentation",
+    name: "Season Coverage",
+    price: "$300",
+    description: "Premium season highlights and action photos",
     features: [
-      "Multiple game coverage",
-      "150+ high-resolution photos",
-      "Custom highlight reel",
+      "Full season game coverage",
+      "125+ edited action and game photos",
+      "30 seconds - 1 minute highlight reel",
       "Individual athlete portraits",
-      "Print release included"
+      "Team photos (Good for coaches!)",
+      "Priority scheduling",
+      "Social media / graphic ready photos"
     ],
     icon: <Crown size={32} className="text-white" />,
     bgGradient: "from-gold/80 to-forest/70",
@@ -250,14 +251,12 @@ const athleticsTiers: Tier[] = [
 const portraitsTiers: Tier[] = [
   {
     id: "starter",
-    name: "Starter",
-    price: "$150",
-    description: "Natural outdoor session",
+    name: "Basic",
+    price: "$155",
     features: [
-      "30-minute session",
+      "1-hour session",
+      "20 edited photos",
       "1 chosen location",
-      "20 high-resolution photos",
-      "Style consultation"
     ],
     icon: <Leaf size={32} className="text-white" />,
     bgGradient: "from-sage/80 to-forest/60",
@@ -266,15 +265,14 @@ const portraitsTiers: Tier[] = [
   },
   {
     id: "pro",
-    name: "Pro",
-    price: "$250",
-    description: "Creative storytelling session",
+    name: "Premium",
+    price: "$225",
     features: [
-      "1-hour session",
+      "2-hour session",
+      "40+ edited photos",
       "Up to 2 locations",
-      "40 high-resolution photos",
-      "Creative consultation",
-      "Outfit changes included"
+      "2 Outfit changes included",
+      "10 photocards of your choice"
     ],
     popular: true,
     icon: <Users size={32} className="text-white" />,
@@ -284,15 +282,16 @@ const portraitsTiers: Tier[] = [
   },
   {
     id: "elite",
-    name: "Elite",
-    price: "$400",
-    description: "Premium narrative experience",
+    name: "Ultimate",
+    price: "$300",
     features: [
-      "2-hour immersive session",
-      "Multiple locations",
-      "70+ high-resolution photos",
-      "Full creative direction",
-      "Behind-the-scenes content"
+      "3-hour immersive session",
+      "60+ edited photos",
+      "Up to 3 locations",
+      "3 Outfit changes included"
+      "5, 8x10 photos",
+      "Location Consultation",
+      "All image files",
     ],
     icon: <Star size={32} className="text-white" />,
     bgGradient: "from-gold/80 to-forest/70",

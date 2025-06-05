@@ -18,7 +18,7 @@ const MainPage: React.FC<MainPageProps> = ({ onNavigate }) => {
 
   const aboutImages = Array.from({ length: 6 }, (_, i) => `/about/aboutme${i + 1}.jpg`);
   const sportsImages = Array.from({ length: 45 }, (_, i) => `/portfolio/athletics/sports${i + 1}.jpg`);
-  const portraitImages = Array.from({ length: 16 }, (_, i) => `/portfolio/athletics/portrait${i + 1}.jpg`);
+  const portraitImages = Array.from({ length: 16 }, (_, i) => `/portfolio/portraits/portrait${i + 1}.jpg`);
 
   useEffect(() => {
     const tiltElement = aboutImageTiltRef.current?.querySelector('img');
