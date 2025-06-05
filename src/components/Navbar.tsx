@@ -117,7 +117,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage, onHeightChange
           onClick={(e) => { e.preventDefault(); onNavigate('home'); }}
           className="flex items-center gap-3 text-text-on-dark hover:text-secondary-light transition-colors duration-300 group"
         >
-          <img src="/shared/logo.svg" alt="Eyes Of T Logo" className="h-10 md:h-12 w-auto transition-transform duration-300 group-hover:scale-110" />
+          <img src="favicon.png" alt="Eyes Of T Logo" className="h-10 md:h-12 w-auto transition-transform duration-300 group-hover:scale-110" />
           <span 
             className="font-barrio text-4xl md:text-5xl" 
             style={{ textShadow: '2px 2px 3px rgba(0,0,0,0.2)' }}
