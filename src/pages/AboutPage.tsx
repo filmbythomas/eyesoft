@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Feather, Palette, Leaf } from 'lucide-react'; // Nature & Photography icons
+import { Feather, Palette, Leaf } from 'lucide-react';
 
 interface IconProps {
   className?: string;
@@ -16,8 +16,31 @@ const PlantDivider: React.FC<{icon?: React.ReactElement<IconProps>}> = ({icon}) 
 
 const AboutPage: React.FC = () => {
   const tiltRef = useRef<HTMLDivElement>(null);
+  const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const images = Array.from({ length: 6 }, (_, i) => `/about/aboutme${i + 1}.jpg`);
+
+  useEffect(() => {
+    const loadedImages: string[] = [];
+    let i = 1;
+    const maxImages = 50;
+    const loadNext = () => {
+      const img = new Image();
+      img.src = `/about/aboutme${i}.jpg`;
+      img.onload = () => {
+        loadedImages.push(img.src);
+        i++;
+        if (i <= maxImages) {
+          loadNext();
+        } else {
+          setImages(loadedImages);
+        }
+      };
+      img.onerror = () => {
+        setImages(loadedImages);
+      };
+    };
+    loadNext();
+  }, []);
 
   useEffect(() => {
     const tiltElement = tiltRef.current;
@@ -49,14 +72,13 @@ const AboutPage: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      setCurrentIndex((prev) => images.length ? (prev + 1) % images.length : 0);
     }, 5000);
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [images]);
 
   return (
     <div className="page-container bg-background text-text-primary overflow-x-hidden">
-      
       <div className="max-w-5xl mx-auto py-10 md:py-16 pt-32 md:pt-36">
         <h1 className="text-center text-primary font-extrabold animate-fadeInUp mb-12 md:mb-20">
           The Eye Behind The Lens
@@ -71,7 +93,7 @@ const AboutPage: React.FC = () => {
                   <img 
                     src={images[currentIndex]} 
                     alt={`About Me ${currentIndex + 1}`} 
-                    className="w-full h-auto object-cover rounded-lg aspect-[4/3] md:aspect-auto md:max-h-[75vh] lg:max-h-[80vh] shadow-lg transition-opacity duration-700 ease-in-out" 
+                    className="w-full h-auto object-cover rounded-lg aspect-[4/3] md:aspect-auto md:max-h-[75vh] lg:max-h-[80vh] shadow-lg transition-opacity duration-1000 ease-in-out" 
                   />
                   <div className="absolute bottom-2.5 right-2.5 bg-surface bg-opacity-85 px-3 py-1.5 rounded-md text-xs font-sans text-text-primary shadow-md font-bold">
                     T // EyesOfTee
@@ -86,23 +108,21 @@ const AboutPage: React.FC = () => {
             <PlantDivider icon={<Feather />} />
             <div className="space-y-6 text-text-secondary leading-relaxed text-base md:text-lg font-sans font-semibold">
               <p className="first-letter:text-5xl first-letter:font-extrabold first-letter:text-primary first-letter:mr-2.5 first-letter:float-left">
-                Hello! I'm T, the heart and soul behind Eyes Of T. My adventure into photography wasn't a planned expedition but a serendipitous discovery. It started with a borrowed camera, a dash of curiosity, and an insatiable desire to capture the fleeting narratives woven into the fabric of everyday life. You can often find glimpses of my latest work and behind-the-scenes on my Instagram: <a href="https://www.instagram.com/eyesofteee" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark font-bold underline transition-colors duration-200">@eyesofteee</a>.
+                Hello! I'm T, the heart and soul behind Eyes Of T...
               </p>
-              
               <blockquote className="border-l-4 border-secondary pl-5 italic text-text-primary my-8 py-2 bg-primary/5 rounded-r-md shadow-sm">
-                "Photography is the art of frozen time... the ability to store emotion and feelings within a frame."
+                "Photography is the art of frozen time..."
               </blockquote>
-              
               <p>
-                For me, a photograph is more than just an image; it's a vessel of emotion, a frozen moment of raw honesty, a timeless echo of beauty. My lens seeks out those unscripted instances – the subtle expressions, the vibrant energy, the quiet poetry that often goes unnoticed.
+                For me, a photograph is more than just an image...
               </p>
               <PlantDivider icon={<Palette />} />
               <h3 className="text-secondary font-extrabold text-xl md:text-2xl mt-8 mb-3">Philosophy & Approach</h3>
               <p>
-                My approach is rooted in authenticity. I thrive on natural light, unique perspectives, and genuine connections. Whether I'm courtside capturing the intensity of an athletic feat or in a quiet corner immortalizing a personal story, my aim is to create art that not only looks stunning but feels deeply resonant. 
+                My approach is rooted in authenticity...
               </p>
               <p>
-                It's about telling <strong className="text-primary-dark font-extrabold">your story</strong>, authentically and beautifully. Let's create something unforgettable together.
+                It's about telling <strong className="text-primary-dark font-extrabold">your story</strong>, authentically and beautifully...
               </p>
             </div>
           </div>

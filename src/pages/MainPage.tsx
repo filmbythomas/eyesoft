@@ -112,7 +112,7 @@ const MainPage: React.FC<MainPageProps> = ({ onNavigate }) => {
             <img 
               src={aboutImages[aboutIndex]}
               alt={`About Image ${aboutIndex + 1}`}
-              className="rounded-xl shadow-2xl object-cover w-full h-auto md:h-[550px] tilt-effect border-4 border-background transition-opacity duration-700 ease-in-out" 
+              className="rounded-xl shadow-2xl object-cover w-full h-auto md:h-[550px] tilt-effect border-4 border-background transition-opacity duration-1000 ease-in-out" 
             />
           </div>
           <div className="text-center md:text-left animate-fadeInUp animation-delay-400">
@@ -140,7 +140,7 @@ const MainPage: React.FC<MainPageProps> = ({ onNavigate }) => {
             <img 
               src={sportsImages[sportsIndex]} 
               alt={`Sports Preview ${sportsIndex + 1}`}
-              className="object-cover w-full h-full transition-opacity duration-700 ease-in-out" 
+              className="object-cover w-full h-full transition-opacity duration-1000 ease-in-out" 
             />
             <div className="absolute bottom-3 left-3 bg-black/50 text-white text-sm px-3 py-1 rounded-md font-semibold shadow-md">
               Athletics
@@ -150,7 +150,7 @@ const MainPage: React.FC<MainPageProps> = ({ onNavigate }) => {
             <img 
               src={portraitImages[portraitIndex]} 
               alt={`Portrait Preview ${portraitIndex + 1}`}
-              className="object-cover w-full h-full transition-opacity duration-700 ease-in-out" 
+              className="object-cover w-full h-full transition-opacity duration-1000 ease-in-out" 
             />
             <div className="absolute bottom-3 left-3 bg-black/50 text-white text-sm px-3 py-1 rounded-md font-semibold shadow-md">
               Portraits
