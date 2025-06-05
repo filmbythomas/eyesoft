@@ -145,7 +145,16 @@ const PortfolioPage: React.FC = () => {
   }, [selectedImage, currentIndex]);
 
   return (
-    <div className={clsx("min-h-screen pt-20", activeCategory ? "bg-cream" : "bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden")}>
+    <div className={clsx(
+  "min-h-screen",
+  activeCategory
+    ? "pt-20 bg-cream"
+    : "bg-[url('/portfolio/portfoliopagebg.png')] bg-[length:150%] bg-repeat animate-diagonalScroll relative overflow-hidden"
+)}>
+  {!activeCategory && (
+    <div className="h-[340px] w-full" />  {/* This spacer prevents content overlap */}
+  )}
+
       {!activeCategory && (
         <>
           <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
