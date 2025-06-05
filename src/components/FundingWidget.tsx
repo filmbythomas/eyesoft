@@ -33,11 +33,11 @@ const FundingWidget: React.FC<FundingWidgetProps> = ({ onNavigate, pageType, nav
       {/* Main Content */}
       <div className="relative z-10 backdrop-blur-sm bg-black/10 border-b border-white/20 shadow-lg">
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-4">
             
             {/* Left Section - Call to Action */}
-            <div className="flex items-center flex-shrink-0 mr-6">
-              <div className="relative mr-4">
+            <div className="flex items-center flex-shrink-0 mr-0 sm:mr-6">
+              <div className="relative mr-3 sm:mr-4">
                 <div className="p-2.5 bg-white/20 rounded-full backdrop-blur-sm border border-white/30 group-hover:scale-105 transition-transform duration-300 shadow-lg">
                   <Camera size={22} className="text-white drop-shadow-sm" />
                 </div>
@@ -58,7 +58,7 @@ const FundingWidget: React.FC<FundingWidgetProps> = ({ onNavigate, pageType, nav
             </div>
 
             {/* Center Section - Progress */}
-            <div className="flex-grow max-w-sm mx-6">
+            <div className="w-full sm:flex-grow sm:max-w-sm mx-auto sm:mx-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-white font-inter text-lg font-bold drop-shadow-sm">
                   ${currentFunding}
@@ -90,7 +90,7 @@ const FundingWidget: React.FC<FundingWidgetProps> = ({ onNavigate, pageType, nav
             </div>
 
             {/* Right Section - Action Button */}
-            <div className="flex items-center flex-shrink-0 ml-6">
+            <div className="flex items-center justify-center sm:justify-end flex-shrink-0 ml-0 sm:ml-6">
               <div className="relative">
                 <div className="px-5 py-2.5 bg-white/20 rounded-xl backdrop-blur-sm border border-white/30 group-hover:bg-white/30 transition-all duration-300 group-hover:scale-105 shadow-lg">
                   <div className="flex items-center gap-2">
