@@ -5,10 +5,10 @@ import { Page } from '../App';
 
 const FundingDetailsPage: React.FC = () => {
   const savingsGoals = [
-    { item: "Sony A7IV Camera Body", goal: 1200, current: 326, link: "https://www.bhphotovideo.com/c/product/1667800-REG/sony_ilce_7m4_b_alpha_a7_iv_mirrorless.html", icon: <CameraIcon size={32} className="text-secondary group-hover:text-secondary-light transition-colors" />, description: "Versatile full-frame for stunning image quality.", category: "Camera Body" },
-    { item: "Sigma 24-70mm f/2.8 Lens", goal: 800, current: 0, link: "https://www.bhphotovideo.com/c/product/1578576-REG/sigma_24_70mm_f_2_8_dg_dn.html", icon: <ImageIconLucide size={32} className="text-secondary group-hover:text-secondary-light transition-colors" />, description: "Workhorse lens for diverse shooting conditions.", category: "Lens" },
-    { item: "Manfrotto Pro Tripod", goal: 300, current: 0, link: "https://www.bhphotovideo.com/c/product/1326009-REG/manfrotto_mk055xpro3_3wus_055_aluminum_tripod.html", icon: <Leaf size={32} className="text-secondary group-hover:text-secondary-light transition-colors" />, description: "Essential for sharp, stable shots, especially in low light.", category: "Accessory" },
-    { item: "Godox AD200Pro Light", goal: 200, current: 0, link: "https://www.bhphotovideo.com/c/product/1562007-REG/godox_ad200pro_ttl_pocket_flash.html", icon: <EnergyIcon size={32} className="text-secondary group-hover:text-secondary-light transition-colors" />, description: "Portable flash for creative lighting on the go.", category: "Lighting" },
+    { item: "Sony A7IV Camera Kit", goal: 2500, current: 326, link: "https://throne.com/thomasgg", icon: <CameraIcon size={32} className="text-secondary group-hover:text-secondary-light transition-colors" />, },
+    { item: "Tamron 70-300mm F/4.5-6.3 Telephoto Lens", goal: 450, current: 0, link: "https://throne.com/thomasgg", icon: <ImageIconLucide size={32} className="text-secondary group-hover:text-secondary-light transition-colors" />, },
+    { item: "DJI Mini 4K Drone", goal: 300, current: 0, link: "https://throne.com/thomasgg", icon: <Leaf size={32} className="text-secondary group-hover:text-secondary-light transition-colors" />, },
+    { item: "14-in-1 Camera Cleaning Kit", goal: 20, current: 0, link: "https://throne.com/thomasgg", icon: <EnergyIcon size={32} className="text-secondary group-hover:text-secondary-light transition-colors" />, },
   ];
 
   const totalGoal = savingsGoals.reduce((sum, item) => sum + item.goal, 0);
