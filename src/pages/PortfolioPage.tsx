@@ -208,7 +208,18 @@ const PortfolioPage: React.FC = () => {
       )}
 
       {selectedImage && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn"
+          onTouchStart={(e) => (window._touchStartX = e.touches[0].clientX)}
+          onTouchEnd={(e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const deltaX = touchEndX - window._touchStartX;
+            if (Math.abs(deltaX) > 50) {
+              if (deltaX > 0 && currentIndex > 0) handlePrev();
+              if (deltaX < 0 && currentIndex < filteredImages.length - 1) handleNext();
+            }
+          }}
+        >
           <button
             className="absolute top-4 right-4 text-white text-3xl hover:text-red-400 transition"
             onClick={() => {
@@ -235,6 +246,24 @@ const PortfolioPage: React.FC = () => {
               >
                 {isZoomed ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
               </button>
+
+              {currentIndex > 0 && (
+                <button
+                  onClick={handlePrev}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow-md opacity-0 hover:opacity-100 transition-opacity duration-300 z-20"
+                >
+                  <ArrowLeft size={28} className="text-forest" />
+                </button>
+              )}
+
+              {currentIndex < filteredImages.length - 1 && (
+                <button
+                  onClick={handleNext}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow-md opacity-0 hover:opacity-100 transition-opacity duration-300 z-20"
+                >
+                  <ArrowRight size={28} className="text-forest" />
+                </button>
+              )}
             </div>
 
             <div className="flex justify-center gap-4 mt-4 flex-wrap px-4">
