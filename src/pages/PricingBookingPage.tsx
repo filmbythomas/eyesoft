@@ -212,7 +212,7 @@ const athleticsTiers: Tier[] = [
   {
     id: "pro",
     name: "3 Day Coverage",
-    price: "$100",
+    price: "$150",
     description: "Comprehensive game coverage for coaches or multiple games.",
     features: [
       "3 Full game coverage",
